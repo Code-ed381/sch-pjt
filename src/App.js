@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import {createHashRouter, Navigate} from "react-router-dom";
+import SignIn from "./components/Auth/SignIn";
+import SignUp from "./components/Auth/SignUp";
+import ResetPassword from "./components/Auth/ResetPassword";
+import Feedback from "./components/Views/Feedback";
+import NotFound from "./components/Views/NotFound";
+import RequireAuth from './components/RequireAuth/RequireAuth';
+import Index from "./components/Index";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+
+const App = createHashRouter([
+  {
+    index: 'true',
+    path:'login',
+    element: <SignIn/>
+  },
+  {
+    path:'register',
+    element: <SignUp/>
+  },
+  {
+    path:'reset-password',
+    element: <ResetPassword/>
+  },
+  {
+    element: <RequireAuth/>,
+    children: [
+      {
+        path: '/',
+        element: <Index/>,
+        children: [
+          {
+            path: 'feedback',
+            element: <Feedback/>
+          }
+        ]
+      }
+      ]
+    },
+    {
+      path: '*',
+      element: <NotFound/>
+    }
+    
+])
 
 export default App;
