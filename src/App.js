@@ -3,6 +3,8 @@ import SignIn from "./components/Auth/SignIn";
 import SignUp from "./components/Auth/SignUp";
 import ResetPassword from "./components/Auth/ResetPassword";
 import Feedback from "./components/Views/Feedback";
+import Contact from "./components/Views/Contact";
+import Customers from "./components/Views/Customers";
 import NotFound from "./components/Views/NotFound";
 import RequireAuth from './components/RequireAuth/RequireAuth';
 import Index from "./components/Index";
@@ -32,7 +34,15 @@ const App = createHashRouter([
           {
             path: 'feedback',
             element: <Feedback/>
-          }
+          },
+          {
+            path: 'contact',
+            element: <Contact/>
+          },
+          {
+            path: 'customers',
+            element: <Customers/>
+          },
         ]
       }
       ]

@@ -50,18 +50,15 @@ export default function ResetPassword() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     
-    supabase.auth.onAuthStateChange(async (event, session) => {
-        if (event == "PASSWORD_RECOVERY") {
-          const { data, error } = await supabase.auth
-            .updateUser({ password: newPassword })
-   
-          if (data) alert("Password updated successfully!")
-          if (error) alert("There was an error updating your password.")
+    const { data, error } = await supabase.auth
+      .updateUser({ password: newPassword })
 
-          navigate('/login')
-        }
-    })
+    console.log(error)
 
+    // if (data) alert("Password updated successfully!")
+    // if (error) alert("There was an error updating your password.")
+
+    navigate('/login')
   };
 
   return (

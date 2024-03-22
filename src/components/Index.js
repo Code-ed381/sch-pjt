@@ -110,11 +110,16 @@ function ResponsiveAppBar() {
                   display: { xs: 'block', md: 'none' },
                 }}
               >
-                {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
+                
+                <MenuItem onClick={()=> {navigate('/feedback'); handleCloseNavMenu()}}>
+                  <Typography textAlign="center">Feedback</Typography>
+                </MenuItem>
+                <MenuItem onClick={()=> {navigate('/contact'); handleCloseNavMenu()}}>
+                  <Typography textAlign="center">Contact</Typography>
+                </MenuItem>
+                <MenuItem onClick={()=> {navigate('/customers'); handleCloseNavMenu()}}>
+                  <Typography textAlign="center">Customers</Typography>
+                </MenuItem>
               </Menu>
             </Box>
             <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -137,15 +142,24 @@ function ResponsiveAppBar() {
               LOGO
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {pages.map((page) => (
                 <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
+                  onClick={()=> navigate('/feedback')}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                  {page}
+                  Feedback
                 </Button>
-              ))}
+                <Button
+                  onClick={()=> navigate('/contact')}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Contact
+                </Button>
+                <Button
+                  onClick={()=> navigate('/customers')}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Customers
+                </Button>
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
@@ -170,17 +184,6 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {/* {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))} */}
-                <MenuItem onClick={()=> {handleCloseUserMenu(); navigate('dashboard')}}>
-                  <Typography textAlign="center">Dashboard</Typography>
-                </MenuItem>
-                <MenuItem onClick={()=> {handleCloseUserMenu();navigate('profile')}}>
-                  <Typography textAlign="center">Profile</Typography>
-                </MenuItem>
                 <MenuItem onClick={handleCloseUserMenu} component="a" href="#/register">
                   <Typography textAlign="center">Register</Typography>
                 </MenuItem>
