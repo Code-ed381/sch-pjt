@@ -178,7 +178,6 @@ export default function SignIn() {
                     </Link>
                     </Grid>
                 </Grid>
-                {/* <Copyright sx={{ mt: 5 }} /> */}
                 </Box>
             </Box>
         </Container>
