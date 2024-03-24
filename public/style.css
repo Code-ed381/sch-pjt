@@ -48,6 +48,15 @@ File: scss
   display: none
 }
 
+.icon-hover:hover {
+  border-color: #3b71ca !important;
+  background-color: white !important;
+}
+
+.icon-hover:hover i {
+  color: #3b71ca !important;
+}
+
 .skin-green {
   /*Theme Colors*/ }
   .skin-green .topbar {

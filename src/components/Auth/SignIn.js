@@ -74,7 +74,7 @@ export default function SignIn() {
 
       setAuth(user)
 
-      navigate('/feedback')
+      navigate(-1)
 
       console.log(session)
     }
