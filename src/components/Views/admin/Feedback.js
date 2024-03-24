@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
@@ -7,12 +7,17 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import feedbackImage from "../../assets/feedback4.jpg";
+import feedbackImage from "../../../assets/feedback4.jpg";
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import { createClient } from '@supabase/supabase-js';
+import Accordion from '@mui/material/Accordion';
+import AccordionActions from '@mui/material/AccordionActions';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Swal from 'sweetalert2'
 
 
@@ -25,6 +30,43 @@ export default function Feedback() {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [content, setContent] = useState('');
+    const [expanded, setExpanded] = React.useState(false);
+    const [data, setData] = useState([]);
+
+    const handleChange = (panel) => (event, isExpanded) => {
+      setExpanded(isExpanded ? panel : false);
+    }
+
+    const getFeedback = async ()=> { 
+        let { data: feedback, error } = await supabase
+        .from('feedback')
+        .select('*')
+        
+        if (error) {
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "Failed to retrieve customer",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+        else {
+            setData(feedback);
+        }
+    }
+
+    useEffect(() => {
+        const controller = new AbortController();
+        var isMounted = true
+    
+        getFeedback()
+    
+        return () => {
+            isMounted = false
+            controller.abort();
+        }
+    }, [])
 
 
     const handleSubmit = async (e)=> {
@@ -74,46 +116,27 @@ export default function Feedback() {
             <Typography variant="h3" m={9}><strong>Feedback</strong></Typography>
         </Paper>
         <Container>
-        <div class="row">
-            <div class="col-sm">
-                <Stack
-                    component="form"
-                    mb={2}
-                    spacing={2}
-                    noValidate
-                    autoComplete="off"
+        <div>
+        {data.map((feedback)=> 
+            <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+                <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1bh-content"
+                id="panel1bh-header"
                 >
-                        
-                    <TextField id="outlined-basic" value={email} onChange={(e)=> setEmail(e.target.value)} label="Email" variant="outlined" />
-
-                    <TextField id="outlined-basic" value={phone} onChange={(e)=> setPhone(e.target.value)} label="Phone Number" variant="outlined" />
-                    
-                    <TextField
-                        id="outlined-multiline-static"
-                        label="Message"
-                        multiline
-                        rows={8}
-                        onChange={(e)=> setContent(e.target.value)}
-                        value={content}
-                    />
-                </Stack>
-                <Button variant="contained" size="large" endIcon={<SendIcon />} onClick={handleSubmit}>
-                    Send 
-                </Button>
-            </div>
-            <div class="col-sm">
-                <div class='m-4'>
-                    <Typography variant="h5" mb={2}><strong>Contact us</strong></Typography>
-                    <ul class="list-group">
-                        <li class="list-group-item"><strong>Email: </strong></li>
-                        <li class="list-group-item"><strong>Phone: </strong></li>
-                        <li class="list-group-item"><strong>Address: </strong></li>
-                        {/* <li class="list-group-item"><strong></strong></li>
-                        <li class="list-group-item"><strong></strong></li> */}
-                    </ul>
-                </div>
-            </div>
-        </div>
+                <Typography variant='h6' sx={{ width: '30%', flexShrink: 0 }}>
+                    <strong>{feedback.name}</strong>
+                </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{feedback.email} - {feedback.phone}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                <Typography variant='h6'>
+                    {feedback.content}
+                </Typography>   
+                </AccordionDetails>
+            </Accordion>
+        )}
+    </div>
         </Container>
     </>
 

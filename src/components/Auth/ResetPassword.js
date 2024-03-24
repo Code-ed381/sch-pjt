@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
 import useAuth from '../Hook/useAuth';
 import Alert from '@mui/material/Alert';
+import Swal from 'sweetalert2'
 
 const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNudnR3anF3aW9tYnB3cXppem9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA5NzUwNDcsImV4cCI6MjAyNjU1MTA0N30.frr4AozItNRzCyJTyHLkoGzg-CcN0uukd8-JMvw97bo"
@@ -46,19 +47,47 @@ export default function ResetPassword() {
   const [errMsg, setErrMsg] = useState('');
   const { setAuth } = useAuth();
   const navigate = useNavigate();
+  const mail = localStorage.getItem('mail')
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
-    const { data, error } = await supabase.auth
-      .updateUser({ password: newPassword })
 
-    console.log(error)
+    const { data, error } = await supabase
+    .from('customers')
+    .update({ password: newPassword })
+    .eq('email', mail)
+    .select()
+
+    if(error) {
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "Update Failed",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      navigate('/signin')
+    }
+    else {
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Update Successful",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      navigate('/signin')
+    }
+
+        
+    
+    // const { data, error } = await supabase.auth
+    //   .updateUser({ password: newPassword })
+
+    // console.log(error)
 
     // if (data) alert("Password updated successfully!")
     // if (error) alert("There was an error updating your password.")
-
-    navigate('/login')
   };
 
   return (

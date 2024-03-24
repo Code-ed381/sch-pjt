@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import useAuth from '../Hook/useAuth';
 import { createClient } from '@supabase/supabase-js';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import image1 from '../../assets/image1.jpg'
 
 const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNudnR3anF3aW9tYnB3cXppem9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA5NzUwNDcsImV4cCI6MjAyNjU1MTA0N30.frr4AozItNRzCyJTyHLkoGzg-CcN0uukd8-JMvw97bo"
@@ -13,46 +14,91 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 const HomePage = ()=> {
     const navigate = useNavigate();
     const { auth, setAuth } = useAuth();
-    const [sign, setSign] = useState('Sign Out')
+    const [sign, setSign] = useState('Sign In')
+    const statusMail = localStorage.getItem('email')
+    const statusPass = localStorage.getItem('password')
+    const [items, setItems] = useState([])
+    const id = localStorage.getItem('id')
 
-    const handleClick = ()=> {
-        if (auth) {
-            prompt("logged in")
-        }
-        else {
-            navigate('/signin')
-        }
+    const SignBtn = ()=> {
+      if(statusMail && statusPass) {
+        return(
+          <button 
+                onClick={handleLogOut} 
+                class="btn btn-primary me-1 py-1 px-3 nav-link d-flex align-items-center text-white" 
+            > <i class="bi bi-person-fill m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Sign Out</p> 
+          </button>
+        )
+      }
+      else {
+        return(
+          <button 
+                onClick={handleLogin} 
+                class="btn btn-primary me-1 py-1 px-3 nav-link d-flex align-items-center text-white" 
+            > <i class="bi bi-person-fill m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Sign In</p> 
+          </button>
+        )
+      }
+    } 
+
+    const getItems = async ()=> {
+      let { data: items, error } = await supabase
+      .from('items')
+      .select('*')
+
+      setItems(items)
+        
+    }
+
+    useEffect(() => {
+      const controller = new AbortController();
+      var isMounted = true
+
+      getItems()
+
+      return () => {
+        isMounted = false
+        controller.abort();
+    }
+    }, [])
+    
+
+    const handleLogin = ()=> {
+      navigate('/signin')
     }
 
     const handleLogOut = ()=> {
-        const logout = async ()=> {
-            const { error } = await supabase.auth.signOut()
-            setAuth(null);
-            localStorage.clear()
-        
-            if(error) {
-              console.error(error)
-            }
+      localStorage.clear()
 
-            Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "Logged out",
-                showConfirmButton: false,
-                timer: 1500
-            });
-        
-            navigate('/home')
-        }
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Logged Out",
+        showConfirmButton: false,
+        timer: 1500
+      });
 
-        if(auth) {
-            logout()
-            // console.log(auth)
-        }
-        else {
-            navigate('/signin')
-        }
+      navigate('/home')
     }
+
+    const handleCheckout = ()=> {
+      if(statusMail && statusPass) {
+        navigate('/checkout')
+      }
+      else {
+        navigate('/login')
+      }
+    }
+
+    const handleCart = ()=> {
+      if(statusMail && statusPass) {
+        alert("logged In")
+      }
+      else {
+        navigate('/login')
+      }
+    }
+
 
 
     return(
@@ -74,13 +120,9 @@ const HomePage = ()=> {
         <!-- Center elements --> */}
         <div class="order-lg-last col-lg-5 col-sm-8 col-8">
           <div class="d-flex float-end">
-            <button 
-                onClick={handleLogOut} 
-                class="btn btn-primary me-1 py-1 px-3 nav-link d-flex align-items-center text-white" 
-            > <i class="bi bi-person-fill m-1 me-md-2"></i><p class="d-none d-md-block mb-0">{auth ? 'Sign Out' : 'Sign In'}</p> 
-            </button>
+            {SignBtn()}
             {/* <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank"> <i class="bi bi-suit-heart-fill m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Wishlist</p> </a> */}
-            <button onClick={handleClick} class="btn btn-outlined-primary py-1 px-3 nav-link d-flex align-items-center"> <i class="bi bi-cart4 m-1 me-md-2"></i><p class="d-none d-md-block mb-0">My cart</p> </button>
+            <button onClick={handleCheckout} class="btn btn-outlined-primary py-1 px-3 nav-link d-flex align-items-center"> <i class="bi bi-cart4 m-1 me-md-2"></i><p class="d-none d-md-block mb-0">My cart</p> </button>
           </div>
           {/* <h5 class="d-flex float-end m-2 text-primary">Hello</h5> */}
         </div>
@@ -169,110 +211,39 @@ const HomePage = ()=> {
     </header>
 
     <div class="row">
-      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-        <div class="card w-100 my-2 shadow-2-strong">
-          <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/1.webp" class="card-img-top" style={{aspectRatio: 1 / 1}} />
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">GoPro HERO6 4K Action Camera - Black</h5>
-            <p class="card-text">$790.50</p>
-            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-            <button onClick={handleClick} class="btn btn-primary shadow-0 me-1">Add to cart</button>
-              <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i class="fas fa-heart fa-lg text-secondary px-1"></i></a>
+      {items.map((item)=> 
+        <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+          <div class="card w-100 my-2 shadow-2-strong">
+            <img src={image1} class="card-img-top" style={{aspectRatio: 1 / 1}} />
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">{item.description}</h5>
+              <p class="card-text">${item.price}</p>
+              <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
+              <button 
+                onClick={async ()=> {
+                  if(statusMail && statusPass) {
+                    const { data, error } = await supabase
+                      .from('cart')
+                      .insert([
+                        { 
+                          customer_id: id, 
+                          item_id: item.id 
+                        },
+                      ])
+                      .select()
+                  }
+                  else {
+                    navigate('/login')
+                  }
+                } }
+                class="btn btn-primary shadow-0 me-1"
+              >Add to cart</button>
+                {/* <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i class="fas fa-heart fa-lg text-secondary px-1"></i></a> */}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-        <div class="card w-100 my-2 shadow-2-strong">
-          <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/2.webp" class="card-img-top" style={{aspectRatio: 1 / 1}} />
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">Canon camera 20x zoom, Black color EOS 2000</h5>
-            <p class="card-text">$320.00</p>
-            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-              <button onClick={handleClick} class="btn btn-primary shadow-0 me-1">Add to cart</button>
-              <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i class="fas fa-heart fa-lg text-secondary px-1"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-        <div class="card w-100 my-2 shadow-2-strong">
-          <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/3.webp" class="card-img-top" style={{aspectRatio: 1 / 1}} />
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">Xiaomi Redmi 8 Original Global Version 4GB</h5>
-            <p class="card-text">$120.00</p>
-            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-              <a href="#!" class="btn btn-primary shadow-0 me-1">Add to cart</a>
-              <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i class="fas fa-heart fa-lg text-secondary px-1"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-        <div class="card w-100 my-2 shadow-2-strong">
-          <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/4.webp" class="card-img-top" style={{aspectRatio: 1 / 1}} />
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">Apple iPhone 12 Pro 6.1" RAM 6GB 512GB Unlocked</h5>
-            <p class="card-text">$120.00</p>
-            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-              <a href="#!" class="btn btn-primary shadow-0 me-1">Add to cart</a>
-              <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i class="fas fa-heart fa-lg text-secondary px-1"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-        <div class="card w-100 my-2 shadow-2-strong">
-          <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/5.webp" class="card-img-top" style={{aspectRatio: 1 / 1}} />
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">Apple Watch Series 1 Sport Case 38mm Black</h5>
-            <p class="card-text">$790.50</p>
-            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-              <a href="#!" class="btn btn-primary shadow-0 me-1">Add to cart</a>
-              <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i class="fas fa-heart fa-lg text-secondary px-1"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-        <div class="card w-100 my-2 shadow-2-strong">
-          <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/6.webp" class="card-img-top" style={{aspectRatio: 1 / 1}} />
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">T-shirts with multiple colors, for men and lady</h5>
-            <p class="card-text">$120.00</p>
-            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-              <a href="#!" class="btn btn-primary shadow-0 me-1">Add to cart</a>
-              <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i class="fas fa-heart fa-lg text-secondary px-1"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-        <div class="card w-100 my-2 shadow-2-strong">
-          <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/7.webp" class="card-img-top" style={{aspectRatio: 1 / 1}} />
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">Gaming Headset 32db Blackbuilt in mic</h5>
-            <p class="card-text">$99.50</p>
-            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-              <a href="#!" class="btn btn-primary shadow-0 me-1">Add to cart</a>
-              <a href="#!" class="btn btn-light border icon-hover px-2 pt-2"><i class="fas fa-heart fa-lg text-secondary px-1"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-        <div class="card w-100 my-2 shadow-2-strong">
-          <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/8.webp" class="card-img-top" style={{aspectRatio: 1 / 1}} />
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">T-shirts with multiple colors, for men and lady</h5>
-            <p class="card-text">$120.00</p>
-            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-              <a href="#!" class="btn btn-primary shadow-0 me-1">Add to cart</a>
-              <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i class="fas fa-heart fa-lg text-secondary px-1"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   </div>
 </section>
@@ -289,11 +260,11 @@ const HomePage = ()=> {
       <div class="col-lg-4 col-md-6">
         <figure class="d-flex align-items-center mb-4">
           <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
-            <i class="fas fa-camera-retro fa-2x fa-fw text-primary floating"></i>
+            <i class="bi bi-camera-fill bi-2x fa-fw text-primary floating"></i>
           </span>
           <figcaption class="info">
             <h6 class="title">Reasonable prices</h6>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor</p>
+            <p>We offer competitive prices that cater to your budget without compromising on quality.</p>
           </figcaption>
         </figure>
         {/* <!-- itemside // --> */}
@@ -302,7 +273,7 @@ const HomePage = ()=> {
       <div class="col-lg-4 col-md-6">
         <figure class="d-flex align-items-center mb-4">
           <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
-            <i class="fas fa-star fa-2x fa-fw text-primary floating"></i>
+            <i class="bi bi-star-fill bi-2x fa-fw text-primary floating"></i>
           </span>
           <figcaption class="info">
             <h6 class="title">Best quality</h6>
@@ -315,7 +286,7 @@ const HomePage = ()=> {
       <div class="col-lg-4 col-md-6">
         <figure class="d-flex align-items-center mb-4">
           <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
-            <i class="fas fa-plane fa-2x fa-fw text-primary floating"></i>
+            <i class="bi bi-airplane-fill text-primary floating"></i>
           </span>
           <figcaption class="info">
             <h6 class="title">Worldwide shipping</h6>
@@ -328,7 +299,7 @@ const HomePage = ()=> {
       <div class="col-lg-4 col-md-6">
         <figure class="d-flex align-items-center mb-4">
           <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
-            <i class="fas fa-users fa-2x fa-fw text-primary floating"></i>
+            <i class="bi bi-people-fill text-primary floating"></i>
           </span>
           <figcaption class="info">
             <h6 class="title">Customer satisfaction</h6>
@@ -341,7 +312,7 @@ const HomePage = ()=> {
       <div class="col-lg-4 col-md-6">
         <figure class="d-flex align-items-center mb-4">
           <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
-            <i class="fas fa-thumbs-up fa-2x fa-fw text-primary floating"></i>
+            <i class="bi bi-hand-thumbs-up-fill text-primary floating"></i>
           </span>
           <figcaption class="info">
             <h6 class="title">Happy customers</h6>
@@ -354,7 +325,7 @@ const HomePage = ()=> {
       <div class="col-lg-4 col-md-6">
         <figure class="d-flex align-items-center mb-4">
           <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
-            <i class="fas fa-box fa-2x fa-fw text-primary floating"></i>
+            <i class="bi bi-box-seam-fill text-primary floating"></i>
           </span>
           <figcaption class="info">
             <h6 class="title">Thousand items</h6>
@@ -371,14 +342,14 @@ const HomePage = ()=> {
 {/* <!-- Feature -->
 
 <!-- Blog --> */}
-<section class="mt-5 mb-4">
+{/* <section class="mt-5 mb-4">
   <div class="container text-dark">
     <header class="mb-4">
       <h3>Blog posts</h3>
     </header>
 
-    <div class="row">
-      <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+    <div class="row"> */}
+      {/* <div class="col-lg-3 col-md-6 col-sm-6 col-12">
         <article>
           <a href="#" class="img-fluid">
             <img class="rounded w-100" src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/posts/1.webp" style={{objectFit: "cover"}} height="160" />
@@ -392,9 +363,9 @@ const HomePage = ()=> {
             <p>When you enter into any new area of science, you almost reach</p>
           </div>
         </article>
-      </div>
+      </div> */}
       {/* <!-- col.// --> */}
-      <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+      {/* <div class="col-lg-3 col-md-6 col-sm-6 col-12">
         <article>
           <a href="#" class="img-fluid">
             <img class="rounded w-100" src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/posts/2.webp" style={{objectFit: "cover"}} height="160" />
@@ -408,9 +379,9 @@ const HomePage = ()=> {
             <p>When you enter into any new area of science, you almost reach</p>
           </div>
         </article>
-      </div>
+      </div> */}
       {/* <!-- col.// --> */}
-      <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+      {/* <div class="col-lg-3 col-md-6 col-sm-6 col-12">
         <article>
           <a href="#" class="img-fluid">
             <img class="rounded w-100" src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/posts/3.webp" style={{objectFit: "cover"}} height="160" />
@@ -424,9 +395,9 @@ const HomePage = ()=> {
             <p>When you enter into any new area of science, you almost reach</p>
           </div>
         </article>
-      </div>
+      </div> */}
       {/* <!-- col.// --> */}
-      <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+      {/* <div class="col-lg-3 col-md-6 col-sm-6 col-12">
         <article>
           <a href="#" class="img-fluid">
             <img class="rounded w-100" src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/posts/4.webp" style={{objectFit: "cover"}} height="160" />
@@ -440,10 +411,10 @@ const HomePage = ()=> {
             <p>When you enter into any new area of science, you almost reach</p>
           </div>
         </article>
-      </div>
-    </div>
+      </div> */}
+    {/* </div>
   </div>
-</section>
+</section> */}
 {/* <!-- Blog -->
 
 <!-- Footer --> */}
@@ -464,41 +435,10 @@ const HomePage = ()=> {
           </p>
         </div>
         {/* <!-- Grid column -->
-
         <!-- Grid column --> */}
         <div class="col-6 col-sm-4 col-lg-2">
           {/* <!-- Links --> */}
-          <h6 class="text-uppercase text-dark fw-bold mb-2">
-            Store
-          </h6>
-          <ul class="list-unstyled mb-4">
-            <li><a class="text-muted" href="#">About us</a></li>
-            <li><a class="text-muted" href="#">Find store</a></li>
-            <li><a class="text-muted" href="#">Categories</a></li>
-            <li><a class="text-muted" href="#">Blogs</a></li>
-          </ul>
-        </div>
-        {/* <!-- Grid column -->
-
-        <!-- Grid column --> */}
-        <div class="col-6 col-sm-4 col-lg-2">
-          {/* <!-- Links --> */}
-          <h6 class="text-uppercase text-dark fw-bold mb-2">
-            Information
-          </h6>
-          <ul class="list-unstyled mb-4">
-            <li><a class="text-muted" href="#">Help center</a></li>
-            <li><a class="text-muted" href="#">Money refund</a></li>
-            <li><a class="text-muted" href="#">Shipping info</a></li>
-            <li><a class="text-muted" href="#">Refunds</a></li>
-          </ul>
-        </div>
-        {/* <!-- Grid column -->
-
-        <!-- Grid column --> */}
-        <div class="col-6 col-sm-4 col-lg-2">
-          {/* <!-- Links --> */}
-          <h6 class="text-uppercase text-dark fw-bold mb-2">
+          {/* <h6 class="text-uppercase text-dark fw-bold mb-2">
             Support
           </h6>
           <ul class="list-unstyled mb-4">
@@ -506,9 +446,36 @@ const HomePage = ()=> {
             <li><a class="text-muted" href="#">Documents</a></li>
             <li><a class="text-muted" href="#">Account restore</a></li>
             <li><a class="text-muted" href="#">My orders</a></li>
+          </ul> */}
+        </div>
+        {/* <!-- Grid column -->
+
+        <!-- Grid column --> */}
+        <div class="col-6 col-sm-4 col-lg-2">
+          {/* <!-- Links --> */}
+          <h6 class="text-uppercase text-dark fw-bold mb-2">
+            Quick Links
+          </h6>
+          <ul class="list-unstyled mb-4">
+            <li><a class="text-muted" href="#">Home</a></li>
+            <li><a class="text-muted" href="#">Shop</a></li>
+            <li><a class="text-muted" href="#">Contact</a></li>
           </ul>
         </div>
         {/* <!-- Grid column -->
+
+        <!-- Grid column --> */}
+        <div class="col-6 col-sm-4 col-lg-2">
+          {/* <!-- Links --> */}
+          {/* <h6 class="text-uppercase text-dark fw-bold mb-2">
+            Admin
+          </h6>
+          <ul class="list-unstyled mb-4">
+            <li><a class="text-muted" href="#">Portal</a></li>
+          </ul> */}
+        </div>
+        {/* <!-- Grid column -->
+
 
         <!-- Grid column --> */}
         <div class="col-12 col-sm-12 col-lg-3">
@@ -542,7 +509,7 @@ const HomePage = ()=> {
         {/* <!--- payment --->
 
         <!--- language selector ---> */}
-        <div class="dropdown dropup">
+        {/* <div class="dropdown dropup">
           <a class="dropdown-toggle text-dark" href="#" id="Dropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false"> <i class="flag-united-kingdom flag m-0 me-1"></i>English </a>
 
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="Dropdown">
@@ -575,7 +542,7 @@ const HomePage = ()=> {
               <a class="dropdown-item" href="#"><i class="flag-portugal flag"></i>Português</a>
             </li>
           </ul>
-        </div>
+        </div> */}
         {/* <!--- language selector ---> */}
       </div>
     </div>

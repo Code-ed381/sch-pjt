@@ -111,14 +111,14 @@ function ResponsiveAppBar() {
                 }}
               >
                 
-                <MenuItem onClick={()=> {navigate('/feedback'); handleCloseNavMenu()}}>
-                  <Typography textAlign="center">Feedback</Typography>
+                <MenuItem onClick={()=> {navigate('/admin/items'); handleCloseNavMenu()}}>
+                  <Typography textAlign="center">Items</Typography>
                 </MenuItem>
-                <MenuItem onClick={()=> {navigate('/contact'); handleCloseNavMenu()}}>
-                  <Typography textAlign="center">Contact</Typography>
-                </MenuItem>
-                <MenuItem onClick={()=> {navigate('/customers'); handleCloseNavMenu()}}>
+                <MenuItem onClick={()=> {navigate('/admin/customers'); handleCloseNavMenu()}}>
                   <Typography textAlign="center">Customers</Typography>
+                </MenuItem>
+                <MenuItem onClick={()=> {navigate('/admin/feedback'); handleCloseNavMenu()}}>
+                  <Typography textAlign="center">Feedback</Typography>
                 </MenuItem>
               </Menu>
             </Box>
@@ -143,22 +143,22 @@ function ResponsiveAppBar() {
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                 <Button
-                  onClick={()=> navigate('/feedback')}
+                  onClick={()=> navigate('/admin/items')}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                  Feedback
+                  Items
                 </Button>
                 <Button
-                  onClick={()=> navigate('/contact')}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  Contact
-                </Button>
-                <Button
-                  onClick={()=> navigate('/customers')}
+                  onClick={()=> navigate('/admin/customers')}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   Customers
+                </Button>
+                <Button
+                  onClick={()=> navigate('/admin/feedback')}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Feedback
                 </Button>
             </Box>
 

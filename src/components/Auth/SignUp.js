@@ -14,15 +14,22 @@ import { useState, useRef, useEffect } from "react";
 import useAuth from '../Hook/useAuth';
 import { useNavigate } from "react-router-dom"
 import { createClient } from '@supabase/supabase-js';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 
 const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNudnR3anF3aW9tYnB3cXppem9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA5NzUwNDcsImV4cCI6MjAyNjU1MTA0N30.frr4AozItNRzCyJTyHLkoGzg-CcN0uukd8-JMvw97bo"
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
+const USER_REGEX = /^[A-Za-z]+(?:\s[A-Za-z]+)+$/;
+// const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const PHONE_REGEX = /^(?:\+\d{12}|\d{10})$/;
+// const PHONE_REGEX = /^\+(?:\d\s?){1,3}(?:\(\d{1,4}\)\s?|\d{1,4})(?:\d{1,4}\s?[-\/]?\s?){1,3}\d{1,4}$/;
 
 function Copyright(props) {
   return (
@@ -47,13 +54,21 @@ export default function SignUp() {
   const userRef = useRef();
   const errRef = useRef();
   const [checked, setChecked] = useState(false)
+  const [role, setRole] = useState('customer')
 
-  const [chapter, setChapter] = useState("");
+  const handleChange = (event) => {
+    setRole(event.target.value);
+  };
+
+  const [fullname, setFullname] = useState("");
   const [validName, setValidName] = useState(false);
   const [userFocus, setUserFocus] = useState(false);
 
   const [email, setEmail] = useState("");
   const [validEmail, setValidEmail] = useState(false);
+
+  const [phone, setPhone] = useState(null);
+  const [validPhone, setValidPhone] = useState(false);
 
   const [pwd, setPwd] = useState("");
   const [validPwd, setValidPwd] = useState(false);
@@ -71,14 +86,19 @@ export default function SignUp() {
   }, [])
 
   useEffect(() => {
-      const result = USER_REGEX.test(chapter);
+      const result = USER_REGEX.test(fullname);
       setValidName(result)
-  }, [chapter])
+  }, [fullname])
 
   useEffect(() => {
       const result = EMAIL_REGEX.test(email);
       setValidEmail(result)
   }, [email])
+
+  useEffect(() => {
+    const result = PHONE_REGEX.test(phone);
+    setValidPhone(result)
+}, [phone])
 
   useEffect(() => {
       const result = PWD_REGEX.test(pwd);
@@ -89,7 +109,7 @@ export default function SignUp() {
 
   useEffect(() => {
       setErrMsg('')
-  }, [ chapter, pwd, matchPwd])
+  }, [ fullname, pwd, matchPwd])
 
   const navigate = useNavigate() 
     
@@ -97,7 +117,7 @@ export default function SignUp() {
       e.preventDefault()
 
       //Error messages for various errors
-      const v1 = USER_REGEX.test(chapter);
+      const v1 = USER_REGEX.test(fullname);
       const v2 = PWD_REGEX.test(pwd);
 
       if (!v1 || !v2) {
@@ -111,7 +131,12 @@ export default function SignUp() {
             email: email,
             password: pwd,
             options: {
-              emailRedirectTo: 'http://localhost:3000/#/feedback',
+              data: {
+                fullname: fullname,
+                phone: phone,
+                role: role
+              },
+              emailRedirectTo: 'http://localhost:3000/#/admin/customers',
             }
           }
         )
@@ -170,25 +195,25 @@ export default function SignUp() {
                     type="text" 
                     required
                     ref={userRef}
-                    class={validName ? "form-control is-valid" : "form-control" && !chapter ? "form-control": "form-control is-invalid"}
+                    class={validName ? "form-control is-valid" : "form-control" && !fullname ? "form-control": "form-control is-invalid"}
                     id="floatingInput" 
                     placeholder="name@example.com"
                     autoComplete="off"
                     onChange={(e) => { 
-                      setChapter(e.target.value)
+                      setFullname(e.target.value)
                     }}
                     aria-invalid = {validName ? "false" : "true"}
                     aria-describedby = "uidnote"
                     onFocus = {()=> setUserFocus(true)}
                     onBlur = {()=> setUserFocus(false)}
-                    value={chapter}
+                    value={fullname}
                   />
-                  <label for="floatingInput">Username</label>
-                  <p id="uidnote" className={userFocus && chapter && !validName ? "instructions": "offscreen"}>
+                  <label for="floatingInput">Full name</label>
+                  <p id="uidnote" className={userFocus && fullname && !validName ? "instructions": "offscreen"}>
                     <i class="ti-info-alt" style={{margin: '5px'}}></i>
                     4 to 24 characters.<br/>
                     Must begin with a letter.<br/>
-                    Letters, numbers, underscores, hyphens allowed.
+                    Must be 2 names.
                   </p>
                 </div>
               </Grid>
@@ -209,6 +234,31 @@ export default function SignUp() {
                     value={email}
                   />
                   <label for="floatingInput">Email address</label>
+                </div>
+              </Grid>
+              <Grid item xs={12}>
+                <div class="form-floating">
+                  <input 
+                    class={validPhone ? "form-control is-valid" : "form-control" && !phone ? "form-control": "form-control is-invalid"}
+                    type="phone" 
+                    required
+                    placeholder = "Phone"
+                    autoComplete = "off" 
+                    onChange={(e) => { 
+                        setPhone(e.target.value)
+                    }}
+                    aria-invalid = {validPhone ? "false" : "true"}
+                    aria-describedby = "emailnote"
+                    id="floatingInput" 
+                    value={phone}
+                  />
+                  <label for="floatingInput">Phone</label>
+                  <p id="uidnote" className={userFocus && phone && !validPhone ? "instructions": "offscreen"}>
+                    <i class="ti-info-alt" style={{margin: '5px'}}></i>
+                    e.g. +233 23XXXXXXX<br/>
+                    <br/>
+                    
+                  </p>
                 </div>
               </Grid>
               <Grid item xs={12}>
@@ -258,7 +308,23 @@ export default function SignUp() {
                   </p>
                 </div>
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Role</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={role}
+                    label="Age"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value='customer'>Customer</MenuItem>
+                    <MenuItem value='admin'>Admin</MenuItem>
+                  </Select>
+                </FormControl>
+
+              </Grid> */}
+              {/* <Grid item xs={12}>
                 <div class="form-check">
                   <input 
                     class="form-check-input" 
@@ -272,8 +338,9 @@ export default function SignUp() {
                     <Link >Agree to all Terms & Conditions</Link>
                   </label>
                 </div>
-              </Grid>
+              </Grid> */}
             </Grid>
+            
             <Button
               type="submit"
               fullWidth
@@ -292,7 +359,7 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
+        {/* <Copyright sx={{ mt: 5 }} />? */}
       </Container>
     </ThemeProvider>
   );

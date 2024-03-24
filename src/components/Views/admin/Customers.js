@@ -23,6 +23,7 @@ export default function Customers() {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [data, setData] = useState([]);
@@ -30,7 +31,7 @@ export default function Customers() {
   const getCustomers = async ()=> {
     let { data: customers, error } = await supabase
     .from('customers')
-    .select('*')
+    .select('*')  
 
     if (error) {
         Swal.fire({
@@ -88,6 +89,7 @@ export default function Customers() {
             phone: phone, 
             firstName: firstName, 
             lastName: lastName, 
+            password: password, 
         },
         ])
         .select()
@@ -115,6 +117,8 @@ export default function Customers() {
             setLastName('')
             setEmail('')
             setPhone('')
+            setPassword('')
+            handleClose();
         }
 
     }
@@ -171,7 +175,7 @@ export default function Customers() {
             </div>
             <div class="row">
                 <Box sx={{ height: 400, width: '100%' }}>
-                    <DataGrid
+                    {/* <DataGrid
                         rows={data}
                         columns={columns}
                         initialState={{
@@ -184,7 +188,32 @@ export default function Customers() {
                         pageSizeOptions={[5]}
                         checkboxSelection
                         disableRowSelectionOnClick
-                    />
+                    /> */}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">First name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Password</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.map((user)=>
+                                <tr>
+                                    <th scope="row">{user.id}</th>
+                                    <td>{user.firstName}</td>
+                                    <td>{user.lastName}</td>
+                                    <td>{user.email}</td>
+                                    <td>{user.phone}</td>
+                                    <td>{user.password}</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </Box>
             </div>
         </Container>
@@ -217,6 +246,7 @@ export default function Customers() {
             <TextField id="outlined-basic" value={lastName} onChange={(e)=> setLastName(e.target.value)} label="Last name" variant="outlined"  />
             <TextField id="outlined-basic" value={email} onChange={(e)=> setEmail(e.target.value)} label="email" variant="outlined"  />
             <TextField id="outlined-basic" value={phone} onChange={(e)=> setPhone(e.target.value)} label="Phone Number" variant="outlined"  />
+            <TextField id="outlined-basic" value={password} onChange={(e)=> setPassword(e.target.value)} label="Password" variant="outlined"  />
             
 
         </Stack>

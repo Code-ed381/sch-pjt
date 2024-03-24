@@ -11,13 +11,15 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 
-const Products = ()=> {
+const Checkout = ()=> {
     const navigate = useNavigate();
     const { auth, setAuth } = useAuth();
     const statusMail = localStorage.getItem('email')
     const statusPass = localStorage.getItem('password')
     const id = localStorage.getItem('id')
     const [items, setItems] = useState([])
+    const [total, setTotal] = useState(null)
+    const [customer, setCustomer] = useState([])
 
     const SignBtn = ()=> {
       if(statusMail && statusPass) {
@@ -41,12 +43,36 @@ const Products = ()=> {
     } 
 
     const getItems = async ()=> {
-      let { data: items, error } = await supabase
-      .from('items')
-      .select('*')
-
-      setItems(items)
+        let { data: cart, error } = await supabase
+        .from('cart')
+        .select(`
+          *,
+          items(*),
+          customers(*)
+        `)
+        .eq('customer_id', id)
         
+        var thetotal = 0
+
+        for (var i = 0; i<cart.length; i++) {
+            thetotal += cart[i].items.price
+        }
+                
+        console.log(thetotal)
+        setTotal(thetotal)
+      setItems(cart)
+      console.log(cart)
+        
+    }
+
+    const getCustomer = async ()=> {
+        let { data: customers, error } = await supabase
+        .from('customers')
+        .select('firstName,lastName')
+        .eq('id', id)
+          
+        setCustomer(customers[0]);
+        console.log(customers)
     }
 
     useEffect(() => {
@@ -54,6 +80,7 @@ const Products = ()=> {
       var isMounted = true
 
       getItems()
+      getCustomer()
 
       return () => {
         isMounted = false
@@ -81,7 +108,7 @@ const Products = ()=> {
 
     const handleCheckout = ()=> {
       if(statusMail && statusPass) {
-        navigate('/checkout')
+        alert("logged In")
       }
       else {
         navigate('/login')
@@ -420,39 +447,225 @@ const Products = ()=> {
         </header> */}
 
     <div class="row">
-      {items.map((item)=> 
-        <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
-          <div class="card w-100 my-2 shadow-2-strong">
-            <img src={image1} class="card-img-top" style={{aspectRatio: 1 / 1}} />
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">{item.description}</h5>
-              <p class="card-text">${item.price}</p>
-              <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-              <button 
-                onClick={async ()=> {
-                  if(statusMail && statusPass) {
-                    const { data, error } = await supabase
-                      .from('cart')
-                      .insert([
-                        { 
-                          customer_id: id, 
-                          item_id: item.id 
-                        },
-                      ])
-                      .select()
-                  }
-                  else {
-                    navigate('/login')
-                  }
-                } }
-                class="btn btn-primary shadow-0 me-1"
-              >Add to cart</button>
-                {/* <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i class="fas fa-heart fa-lg text-secondary px-1"></i></a> */}
-              </div>
+    <section class="h-100 h-custom" style={{backgroundColor: '#eee'}}>
+            <div class="container py-5 h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col">
+                    <div class="card">
+                    <div class="card-body p-4">
+
+                        <div class="row">
+
+                        <div class="col-lg-7">
+                            <h5 class="mb-3"><a href="#/product" class="text-body"><i
+                                class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
+                            <hr/>
+
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <p class="mb-1">Shopping cart</p>
+                                <p class="mb-0">You have {items.length} items in your cart</p>
+                            </div>
+                            <div>
+                                <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!"
+                                    class="text-body">price <i class="fas fa-angle-down mt-1"></i></a></p>
+                            </div>
+                            </div>
+
+
+                            {items.map((item)=> 
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div>
+                                            <img
+                                                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                                                class="img-fluid rounded-3" alt="Shopping item" style={{width: '65px'}}/>
+                                            </div>
+                                            <div class="ms-3">
+                                            <h5>{item.items.name}</h5>
+                                            <p class="small mb-0">{item.items.description}</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div style={{width: '50px'}}>
+                                            <h5 class="fw-normal mb-0">2</h5>
+                                            </div>
+                                            <div style={{width: '80px'}}>
+                                            <h5 class="mb-0">${item.items.price}</h5>
+                                            </div>
+                                            <a href="#!" style={{color: '#cecece'}}><i class="fas fa-trash-alt"></i></a>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                <div class="d-flex flex-row align-items-center">
+                                    <div>
+                                    <img
+                                        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img2.webp"
+                                        class="img-fluid rounded-3" alt="Shopping item" style={{width: '65px'}}/>
+                                    </div>
+                                    <div class="ms-3">
+                                    <h5>Samsung galaxy Note 10 </h5>
+                                    <p class="small mb-0">256GB, Navy Blue</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center">
+                                    <div style={{width: '50px'}}>
+                                    <h5 class="fw-normal mb-0">2</h5>
+                                    </div>
+                                    <div style={{width: '80px'}}>
+                                    <h5 class="mb-0">$900</h5>
+                                    </div>
+                                    <a href="#!" style={{color: '#cecece'}}><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                <div class="d-flex flex-row align-items-center">
+                                    <div>
+                                    <img
+                                        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img3.webp"
+                                        class="img-fluid rounded-3" alt="Shopping item" style={{width: '65px'}}/>
+                                    </div>
+                                    <div class="ms-3">
+                                    <h5>Canon EOS M50</h5>
+                                    <p class="small mb-0">Onyx Black</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center">
+                                    <div style={{width: '50px'}}>
+                                    <h5 class="fw-normal mb-0">1</h5>
+                                    </div>
+                                    <div style={{width: '80px'}}>
+                                    <h5 class="mb-0">$1199</h5>
+                                    </div>
+                                    <a href="#!" style={{color: '#cecece'}}><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div class="card mb-3 mb-lg-0">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                <div class="d-flex flex-row align-items-center">
+                                    <div>
+                                    <img
+                                        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img4.webp"
+                                        class="img-fluid rounded-3" alt="Shopping item" style={{width: '65px'}}/>
+                                    </div>
+                                    <div class="ms-3">
+                                    <h5>MacBook Pro</h5>
+                                    <p class="small mb-0">1TB, Graphite</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-row align-items-center">
+                                    <div style={{width: '50px'}}>
+                                    <h5 class="fw-normal mb-0">1</h5>
+                                    </div>
+                                    <div style={{width: '80px'}}>
+                                    <h5 class="mb-0">$1799</h5>
+                                    </div>
+                                    <a href="#!" style={{color: '#cecece'}}><i class="fas fa-trash-alt"></i></a>
+                                </div>
+                                </div>
+                            </div>
+                            </div> */}
+
+                        </div>
+                        <div class="col-lg-5">
+
+                            <div class="card bg-primary text-white rounded-3">
+                            <div class="card-body">
+                                {/* <div class="d-flex justify-content-between align-items-center mb-4"> */}
+                                {/* <div class=" mb-4">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
+                                    class="img-fluid rounded-3" style={{width: '45px'}} alt="Avatar"/>
+                                </div> */}
+
+                                <h3 class="mb-3">{customer.firstName} {customer.lastName}</h3>
+
+                                <h5 class="mb-3">Card details</h5>
+                                <form class="mt-4">
+                                <div class="form-outline form-white mb-4">
+                                    <input type="text" id="typeName" class="form-control form-control-lg" siez="17"
+                                    placeholder="Cardholder's Name" />
+                                    <label class="form-label" for="typeName">Cardholder's Name</label>
+                                </div>
+
+                                <div class="form-outline form-white mb-4">
+                                    <input type="text" id="typeText" class="form-control form-control-lg" siez="17"
+                                    placeholder="1234 5678 9012 3457" minlength="19" maxlength="19" />
+                                    <label class="form-label" for="typeText">Card Number</label>
+                                </div>
+
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                    <div class="form-outline form-white">
+                                        <input type="text" id="typeExp" class="form-control form-control-lg"
+                                        placeholder="MM/YYYY" size="7" id="exp" minlength="7" maxlength="7" />
+                                        <label class="form-label" for="typeExp">Expiration</label>
+                                    </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <div class="form-outline form-white">
+                                        <input type="password" id="typeText" class="form-control form-control-lg"
+                                        placeholder="&#9679;&#9679;&#9679;" size="1" minlength="3" maxlength="3" />
+                                        <label class="form-label" for="typeText">Cvv</label>
+                                    </div>
+                                    </div>
+                                </div>
+
+                                </form>
+
+                                <hr class="my-4"/>
+
+                                <div class="d-flex justify-content-between">
+                                <p class="mb-2">Subtotal</p>
+                                <p class="mb-2">${total}</p>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                <p class="mb-2">Shipping</p>
+                                <p class="mb-2">$20.00</p>
+                                </div>
+
+                                <div class="d-flex justify-content-between mb-4">
+                                <p class="mb-2">Total(Incl. taxes)</p>
+                                <p class="mb-2">${total + 20.00 + 10.00}</p>
+                                </div>
+
+                                <button type="button" class="btn btn-info btn-block btn-lg">
+                                <div class="d-flex justify-content-between">
+                                    <span>Checkout:      <i class="fas fa-long-arrow-alt-right ms-2"></i></span>
+                                    <span>${total + 20.00 + 10.00}</span>
+                                </div>
+                                </button>
+
+                            </div>
+                            </div>
+
+                        </div>
+
+                        </div>
+
+                    </div>
+                    </div>
+                </div>
+                </div>
             </div>
-          </div>
-        </div>
-      )}
+        </section>
     </div>
 
         <hr />
@@ -538,7 +751,7 @@ const Products = ()=> {
             Admin
           </h6>
           <ul class="list-unstyled mb-4">
-            <li><a class="text-light" href="#">Portal</a></li>
+            <li><a class="text-light" href="#/admin/customers">Portal</a></li>
           </ul> */}
         </div>
         {/* <!-- Grid column -->
@@ -621,4 +834,4 @@ const Products = ()=> {
     )
 }
 
-export default Products;
+export default Checkout;

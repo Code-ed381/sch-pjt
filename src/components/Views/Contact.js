@@ -16,86 +16,105 @@ const Products = ()=> {
     const [content, setContent] = useState('');
     const navigate = useNavigate();
     const { auth, setAuth } = useAuth();
-
+    const statusMail = localStorage.getItem('email')
+    const statusPass = localStorage.getItem('password')
 
     const handleSubmit = async (e)=> {
-        e.preventDefault();
+      e.preventDefault();
 
-        const { data, error } = await supabase
-        .from('feedback')
-        .insert([
-        { 
-            name: name, 
-            email: email, 
-            phone: phone, 
-            content: content, 
-        },
-        ])
-        .select()
+      const { data, error } = await supabase
+      .from('feedback')
+      .insert([
+      { 
+          name: name, 
+          email: email, 
+          phone: phone, 
+          content: content, 
+      },
+      ])
+      .select()
 
-        if (error) {
-            Swal.fire({
-                position: "top-end",
-                icon: "error",
-                title: "Failed to send feedback",
-                showConfirmButton: false,
-                timer: 1500
-            });
-        }
-        else{
-            Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "Your feedbank was sent",
-                showConfirmButton: false,
-                timer: 1500
-            });
+      if (error) {
+          Swal.fire({
+              position: "top-end",
+              icon: "error",
+              title: "Failed to send feedback",
+              showConfirmButton: false,
+              timer: 1500
+          });
+      }
+      else{
+          Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Your feedbank was sent",
+              showConfirmButton: false,
+              timer: 1500
+          });
 
-            setContent('')
-            setEmail('')
-            setPhone('')
-            setName('')
-        }
+          setContent('')
+          setEmail('')
+          setPhone('')
+          setName('')
+      }
+  }
 
-    }
 
-    const handleClick = ()=> {
-        if (auth) {
-            prompt("logged in")
-        }
-        else {
-            navigate('/signin')
-        }
+    const SignBtn = ()=> {
+      if(statusMail && statusPass) {
+        return(
+          <button 
+                onClick={handleLogOut} 
+                class="btn btn-primary me-1 py-1 px-3 nav-link d-flex align-items-center text-white" 
+            > <i class="bi bi-person-fill m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Sign Out</p> 
+          </button>
+        )
+      }
+      else {
+        return(
+          <button 
+                onClick={handleLogin} 
+                class="btn btn-primary me-1 py-1 px-3 nav-link d-flex align-items-center text-white" 
+            > <i class="bi bi-person-fill m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Sign In</p> 
+          </button>
+        )
+      }
+    } 
+
+    const handleLogin = ()=> {
+      navigate('/signin')
     }
 
     const handleLogOut = ()=> {
-        const logout = async ()=> {
-            const { error } = await supabase.auth.signOut()
-            setAuth(null);
-            localStorage.clear()
-        
-            if(error) {
-              console.error(error)
-            }
+      localStorage.clear()
 
-            Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "Logged out",
-                showConfirmButton: false,
-                timer: 1500
-            });
-        
-            navigate('/home')
-        }
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Logged Out",
+        showConfirmButton: false,
+        timer: 1500
+      });
 
-        if(auth) {
-            logout()
-            // console.log(auth)
-        }
-        else {
-            navigate('/signin')
-        }
+      navigate('/home')
+    }
+
+    const handleCheckout = ()=> {
+      if(statusMail && statusPass) {
+        navigate('/checkout')
+      }
+      else {
+        navigate('/login')
+      }
+    }
+
+    const handleCart = ()=> {
+      if(statusMail && statusPass) {
+        alert("logged In")
+      }
+      else {
+        navigate('/login')
+      }
     }
 
     return(
@@ -117,13 +136,9 @@ const Products = ()=> {
         {/* <!-- Center elements --> */}
         <div class="order-lg-last col-lg-5 col-sm-8 col-8">
           <div class="d-flex float-end">
-            <button 
-                onClick={handleLogOut} 
-                class="btn btn-primary me-1 py-1 px-3 nav-link d-flex align-items-center text-white" 
-            > <i class="bi bi-person-fill m-1 me-md-2"></i><p class="d-none d-md-block mb-0">{auth ? 'Sign Out' : 'Sign In'}</p> 
-            </button>
+            {SignBtn()}
             {/* <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank"> <i class="bi bi-suit-heart-fill m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Wishlist</p> </a> */}
-            <button onClick={handleClick} class="btn btn-outlined-primary py-1 px-3 nav-link d-flex align-items-center"> <i class="bi bi-cart4 m-1 me-md-2"></i><p class="d-none d-md-block mb-0">My cart</p> </button>
+            <button onClick={handleCheckout} class="btn btn-outlined-primary py-1 px-3 nav-link d-flex align-items-center"> <i class="bi bi-cart4 m-1 me-md-2"></i><p class="d-none d-md-block mb-0">My cart</p> </button>
           </div>
           {/* <h5 class="d-flex float-end m-2 text-primary">Hello</h5> */}
         </div>
@@ -322,65 +337,61 @@ const Products = ()=> {
         {/* <!-- Grid column --> */}
         <div class="col-12 col-lg-3 col-sm-12 mb-2">
           {/* <!-- Content --> */}
-          <a href="https://mdbootstrap.com/" target="_blank" class="text-white h2">
-            MDB
+          <a href="https://mdbootstrap.com/" target="_blank" class="">
+            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
           </a>
-          <p class="mt-1 text-white">
+          <p class="mt-2 text-light">
             © 2023 Copyright: MDBootstrap.com
           </p>
         </div>
-        {/* <!-- Grid column --> */}
-
-        {/* <!-- Grid column --> */}
+        {/* <!-- Grid column -->
+        <!-- Grid column --> */}
         <div class="col-6 col-sm-4 col-lg-2">
           {/* <!-- Links --> */}
-          <h6 class="text-uppercase text-white fw-bold mb-2">
-            Store
-          </h6>
-          <ul class="list-unstyled mb-4">
-            <li><a class="text-white-50" href="#">About us</a></li>
-            <li><a class="text-white-50" href="#">Find store</a></li>
-            <li><a class="text-white-50" href="#">Categories</a></li>
-            <li><a class="text-white-50" href="#">Blogs</a></li>
-          </ul>
-        </div>
-        {/* <!-- Grid column --> */}
-
-        {/* <!-- Grid column --> */}
-        <div class="col-6 col-sm-4 col-lg-2">
-          {/* <!-- Links --> */}
-          <h6 class="text-uppercase text-white fw-bold mb-2">
-            Information
-          </h6>
-          <ul class="list-unstyled mb-4">
-            <li><a class="text-white-50" href="#">Help center</a></li>
-            <li><a class="text-white-50" href="#">Money refund</a></li>
-            <li><a class="text-white-50" href="#">Shipping info</a></li>
-            <li><a class="text-white-50" href="#">Refunds</a></li>
-          </ul>
-        </div>
-        {/* <!-- Grid column --> */}
-
-        {/* <!-- Grid column --> */}
-        <div class="col-6 col-sm-4 col-lg-2">
-          {/* <!-- Links --> */}
-          <h6 class="text-uppercase text-white fw-bold mb-2">
+          {/* <h6 class="text-uppercase text-dark fw-bold mb-2">
             Support
           </h6>
           <ul class="list-unstyled mb-4">
-            <li><a class="text-white-50" href="#">Help center</a></li>
-            <li><a class="text-white-50" href="#">Documents</a></li>
-            <li><a class="text-white-50" href="#">Account restore</a></li>
-            <li><a class="text-white-50" href="#">My orders</a></li>
+            <li><a class="text-muted" href="#">Help center</a></li>
+            <li><a class="text-muted" href="#">Documents</a></li>
+            <li><a class="text-muted" href="#">Account restore</a></li>
+            <li><a class="text-muted" href="#">My orders</a></li>
+          </ul> */}
+        </div>
+        {/* <!-- Grid column -->
+
+        <!-- Grid column --> */}
+        <div class="col-6 col-sm-4 col-lg-2">
+          {/* <!-- Links --> */}
+          <h6 class="text-uppercase text-light fw-bold mb-2">
+            Quick Links
+          </h6>
+          <ul class="list-unstyled mb-4">
+            <li><a class="text-light" href="#">Home</a></li>
+            <li><a class="text-light" href="#">Shop</a></li>
+            <li><a class="text-light" href="#">Contact</a></li>
           </ul>
         </div>
-        {/* <!-- Grid column --> */}
+        {/* <!-- Grid column -->
 
-        {/* <!-- Grid column --> */}
+        <!-- Grid column --> */}
+        <div class="col-6 col-sm-4 col-lg-2">
+          {/* <!-- Links --> */}
+          {/* <h6 class="text-uppercase text-light fw-bold mb-2">
+            Admin
+          </h6>
+          <ul class="list-unstyled mb-4">
+            <li><a class="text-light" href="#">Portal</a></li>
+          </ul> */}
+        </div>
+        {/* <!-- Grid column -->
+
+
+        <!-- Grid column --> */}
         <div class="col-12 col-sm-12 col-lg-3">
           {/* <!-- Links --> */}
-          <h6 class="text-uppercase text-white fw-bold mb-2">Newsletter</h6>
-          <p class="text-white">Stay in touch with latest updates about our products and offers</p>
+          <h6 class="text-uppercase text-light fw-bold mb-2">Newsletter</h6>
+          <p class="text-light">Stay in touch with latest updates about our products and offers</p>
           <div class="input-group mb-3">
             <input type="email" class="form-control border" placeholder="Email" aria-label="Email" aria-describedby="button-addon2" />
             <button class="btn btn-light border shadow-0" type="button" id="button-addon2" data-mdb-ripple-color="dark">
@@ -400,16 +411,16 @@ const Products = ()=> {
       <div class="d-flex justify-content-between py-4 border-top">
         {/* <!--- payment ---> */}
         <div>
-          <i class="fab fa-lg fa-cc-visa text-white"></i>
-          <i class="fab fa-lg fa-cc-amex text-white"></i>
-          <i class="fab fa-lg fa-cc-mastercard text-white"></i>
-          <i class="fab fa-lg fa-cc-paypal text-white"></i>
+          <i class="fab fa-lg fa-cc-visa text-dark"></i>
+          <i class="fab fa-lg fa-cc-amex text-dark"></i>
+          <i class="fab fa-lg fa-cc-mastercard text-dark"></i>
+          <i class="fab fa-lg fa-cc-paypal text-dark"></i>
         </div>
-        {/* <!--- payment ---> */}
+        {/* <!--- payment --->
 
-        {/* <!--- language selector ---> */}
-        <div class="dropdown dropup">
-          <a class="dropdown-toggle text-white" href="#" id="Dropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false"> <i class="flag-united-kingdom flag m-0 me-1"></i>English </a>
+        <!--- language selector ---> */}
+        {/* <div class="dropdown dropup">
+          <a class="dropdown-toggle text-dark" href="#" id="Dropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false"> <i class="flag-united-kingdom flag m-0 me-1"></i>English </a>
 
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="Dropdown">
             <li>
@@ -441,7 +452,7 @@ const Products = ()=> {
               <a class="dropdown-item" href="#"><i class="flag-portugal flag"></i>Português</a>
             </li>
           </ul>
-        </div>
+        </div> */}
         {/* <!--- language selector ---> */}
       </div>
     </div>

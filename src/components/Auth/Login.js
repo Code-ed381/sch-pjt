@@ -18,6 +18,7 @@ function App() {
   const [errMsg, setErrMsg] = useState('');
   const [type, setType] = useState('password')
   const [pwd, setPwd] = useState('');
+  const [data, setData] = useState([]);
   const [isRevealPwd, setIsRevealPwd] = useState('bx bx-hide eye-icon');
   const { setAuth } = useAuth();
   const navigate = useNavigate();
@@ -25,29 +26,58 @@ function App() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         
-        const {
-        data: { user },
-        error,
-        } = await supabase
-        .auth
-        .signInWithPassword({ email, password })
+        let { data: customers, error } = await supabase
+        .from('customers')
+        .select('*')
 
-        if(error) {
-        setErrMsg(error.message)
+        setData(customers)
+
+        console.log(customers)
+
+        // Iterate through each user object in the array
+        for (const customer of customers) {
+            // Compare the values associated with the 'email' and 'password' keys
+            if (customer.email === email) {
+                localStorage.setItem('email', 'true');
+                navigate('/home')
+            }
         }
-        else {
-        const {
-            data: { session },
-        } = await supabase.auth.getSession()
 
-        const { user } = session 
-
-        setAuth(user)
-
-        navigate(-1)
-
-        console.log(session)
+        // Iterate through each user object in the array
+        for (const customer of customers) {
+            // Compare the values associated with the 'email' and 'password' keys
+            if (customer.password === password) {
+                localStorage.setItem('password', 'true');
+                localStorage.setItem('id', customer.id);
+            }
         }
+
+        const validmail = localStorage.getItem('email')
+        const validpassword = localStorage.getItem('password')
+
+        console.log(validmail)
+        console.log(validpassword)
+
+        if (validmail === true && validpassword === true) {
+            navigate('/home')
+        }
+        else(
+            setErrMsg('Invalid username or password')
+        )
+
+        // if(error) {
+        //     setErrMsg(error.message)
+        // }
+        // else {
+        // const {
+        //     data: { session },
+        // } = await supabase.auth.getSession()
+
+        // const { user } = session 
+
+        // setAuth(user)
+
+
     };
 
   const handleChange = ()=> {
@@ -61,11 +91,27 @@ function App() {
     }
   }
 
+  const handleReset = ()=> {
+    if(email === '') {
+        setErrMsg('Email is required'); 
+    }
+    else {
+        localStorage.setItem('mail', email);
+        navigate('/reset-password');
+    }
+  }
+
   return (
     <section class="container-auth forms">
     <div class="formed login">
         <div class="form-content">
             <header class="header">Login</header>
+            { errMsg ? 
+                <Alert variant="filled" severity="error" sx={{ width: '100%' }}>
+                    {errMsg}
+                </Alert> :
+                ""          
+            }
             <form id="loginForm">
                 <div class="field input-field">
                     <input type="email" placeholder="Email" class="input" id="email" onChange={(e)=> setEmail(e.target.value)}/>
@@ -77,7 +123,7 @@ function App() {
                 </div>
 
                 <div class="form-link">
-                    <a href="#" class="forgot-pass">Forgot password?</a>
+                    <a onClick={handleReset} class="forgot-pass">Forgot password?</a>
                 </div>
 
                 <div class="field button-field">
@@ -85,9 +131,9 @@ function App() {
                 </div>
             </form>
 
-            <div class="form-link">
+            {/* <div class="form-link">
                 <span>Don't have an account? <a href="#/signup" class="link signup-link">Signup</a></span>
-            </div>
+            </div> */}
         </div>
 
         {/* <div class="line"></div>
