@@ -3,7 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import Swal from 'sweetalert2'
 import { useNavigate } from "react-router-dom";
 import useAuth from '../Hook/useAuth';
-import image1 from '../../assets/image1.jpg'
+import image1 from '../../assets/image1.jpg';
+import logo from '../../assets/logo.png';
 
 
 const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
@@ -84,7 +85,7 @@ const Products = ()=> {
         navigate('/checkout')
       }
       else {
-        navigate('/login')
+        navigate('/signin')
       }
     }
 
@@ -115,8 +116,9 @@ const Products = ()=> {
       <div class="row gy-3">
         {/* <!-- Left elements --> */}
         <div class="col-lg-2 col-sm-4 col-4">
-          <a href="https://mdbootstrap.com/" target="_blank" class="float-start">
-            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
+          <a href="#/home" target="_blank" class="float-start">
+            <img src={logo} height="50" />
+            {/* <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" /> */}
           </a>
         </div>
         {/* <!-- Left elements --> */}
@@ -159,9 +161,9 @@ const Products = ()=> {
         <h6 class="mb-0">
           <a href="#/home" class="text-white-50">Home</a>
           <span class="text-white-50 mx-2"> </span>
-          <a href="#/contact" class="text-white-50"><u>Contact</u></a>
-          <span class="text-white-50 mx-2"> </span>
           <a href="#/products" class="text-white"><u>Shop</u></a>
+          <span class="text-white-50 mx-2"> </span>
+          <a href="#/contact" class="text-white-50"><u>Contact</u></a>
         </h6>
       </nav>
       {/* <!-- Breadcrumb --> */}
@@ -423,10 +425,11 @@ const Products = ()=> {
       {items.map((item)=> 
         <div class="col-lg-4 col-md-6 col-sm-6 d-flex">
           <div class="card w-100 my-2 shadow-2-strong">
-            <img src={image1} class="card-img-top" style={{aspectRatio: 1 / 1}} />
+            <img src={item.img} class="card-img-top" style={{aspectRatio: 1 / 1}} />
             <div class="card-body d-flex flex-column">
-              <h5 class="card-title">{item.description}</h5>
-              <p class="card-text">${item.price}</p>
+              <h5 class="card-title">{item.name}</h5>
+              <p class="text-mute">{item.description}</p>
+              <h6 class="card-text"><strong>${item.price}</strong></h6>
               <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
               <button 
                 onClick={async ()=> {
@@ -442,7 +445,7 @@ const Products = ()=> {
                       .select()
                   }
                   else {
-                    navigate('/login')
+                    navigate('/signin')
                   }
                 } }
                 class="btn btn-primary shadow-0 me-1"
@@ -494,11 +497,11 @@ const Products = ()=> {
         {/* <!-- Grid column --> */}
         <div class="col-12 col-lg-3 col-sm-12 mb-2">
           {/* <!-- Content --> */}
-          <a href="https://mdbootstrap.com/" target="_blank" class="">
-            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
+          <a href="#/home" target="_blank" class="">
+            <img src={logo} height="100" />
           </a>
           <p class="mt-2 text-light">
-            © 2023 Copyright: MDBootstrap.com
+            © 2024 Copyright: E-commerce Project
           </p>
         </div>
         {/* <!-- Grid column -->
@@ -524,9 +527,10 @@ const Products = ()=> {
             Quick Links
           </h6>
           <ul class="list-unstyled mb-4">
-            <li><a class="text-light" href="#">Home</a></li>
-            <li><a class="text-light" href="#">Shop</a></li>
-            <li><a class="text-light" href="#">Contact</a></li>
+            <li><a class="text-light" href="#/home">Home</a></li>
+            <li><a class="text-light" href="#/products">Shop</a></li>
+            <li><a class="text-light" href="#/contact">Contact</a></li>
+            <li><a class="text-light" href="#/admin/customers">Admin</a></li>
           </ul>
         </div>
         {/* <!-- Grid column -->

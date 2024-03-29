@@ -39,7 +39,7 @@ function App() {
             // Compare the values associated with the 'email' and 'password' keys
             if (customer.email === email) {
                 localStorage.setItem('email', 'true');
-                navigate('/home')
+                // navigate('/home')
             }
         }
 
@@ -58,7 +58,7 @@ function App() {
         console.log(validmail)
         console.log(validpassword)
 
-        if (validmail === true && validpassword === true) {
+        if (validmail && validpassword) {
             navigate('/home')
         }
         else(
@@ -76,8 +76,6 @@ function App() {
         // const { user } = session 
 
         // setAuth(user)
-
-
     };
 
   const handleChange = ()=> {

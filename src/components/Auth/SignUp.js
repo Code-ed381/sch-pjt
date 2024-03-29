@@ -18,6 +18,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Swal from 'sweetalert2';
 
 
 const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
@@ -54,11 +55,7 @@ export default function SignUp() {
   const userRef = useRef();
   const errRef = useRef();
   const [checked, setChecked] = useState(false)
-  const [role, setRole] = useState('customer')
-
-  const handleChange = (event) => {
-    setRole(event.target.value);
-  };
+  const [reveal, setReveal] = useState('password');
 
   const [fullname, setFullname] = useState("");
   const [validName, setValidName] = useState(false);
@@ -69,6 +66,7 @@ export default function SignUp() {
 
   const [phone, setPhone] = useState(null);
   const [validPhone, setValidPhone] = useState(false);
+  const [phoneFocus, setPhoneFocus] = useState(false);
 
   const [pwd, setPwd] = useState("");
   const [validPwd, setValidPwd] = useState(false);
@@ -79,6 +77,15 @@ export default function SignUp() {
   const [matchFocus, setMatchFocus] = useState(false);
 
   const [errMsg, setErrMsg] = useState(false);
+
+  const handleReveal = ()=> {
+    if(reveal === "password") {
+      setReveal('text')
+    }
+    else {
+      setReveal('password')
+    }
+  }
 
 
   useEffect(() => {
@@ -98,7 +105,7 @@ export default function SignUp() {
   useEffect(() => {
     const result = PHONE_REGEX.test(phone);
     setValidPhone(result)
-}, [phone])
+  }, [phone])
 
   useEffect(() => {
       const result = PWD_REGEX.test(pwd);
@@ -134,22 +141,28 @@ export default function SignUp() {
               data: {
                 fullname: fullname,
                 phone: phone,
-                role: role
               },
               emailRedirectTo: 'http://localhost:3000/#/admin/customers',
             }
           }
         )
         if(error) {
-          throw new Error(error.message);
+          setErrMsg(error.message);
         }
-
-        console.log(user)
-        setAuth(user);
         // localStorage.setItem('supabase.auth.token', session.access_token);
         
-        navigate('/feedback');
-        
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Admin added",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        setFullname('');
+        setPwd('');
+        setPhone('');
+        setEmail('');
+        setMatchPwd('');
       }
       catch (err) {
         console.log(err)
@@ -178,8 +191,8 @@ export default function SignUp() {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <HowToRegIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
+          <Typography variant="h6">
+            Sign up new admin
           </Typography>
           { errMsg ? 
             <Alert variant="filled" severity="error" sx={{ width: '100%' }}>
@@ -251,6 +264,8 @@ export default function SignUp() {
                     aria-describedby = "emailnote"
                     id="floatingInput" 
                     value={phone}
+                    onFocus = {()=> setPhoneFocus(true)}
+                    onBlur = {()=> setPhoneFocus(false)}
                   />
                   <label for="floatingInput">Phone</label>
                   <p id="uidnote" className={userFocus && phone && !validPhone ? "instructions": "offscreen"}>
@@ -265,7 +280,7 @@ export default function SignUp() {
                 <div class="form-floating">
                   <input 
                     class={validPwd ? "form-control is-valid" : "form-control" && !pwd ? "form-control": "form-control is-invalid"}
-                    type="password" 
+                    type={reveal}
                     required 
                     placeholder="Password"
                     onChange={(e) => { 
@@ -290,7 +305,7 @@ export default function SignUp() {
                 <div class="form-floating">
                   <input 
                     class={validMatch && matchPwd ? "form-control is-valid" : "form-control" && (validMatch || !matchPwd) ? "form-control": "form-control is-invalid"}
-                    type="password" 
+                    type={reveal} 
                     required
                     placeholder="Confirm Password"
                     onChange={(e) => { 
@@ -308,37 +323,19 @@ export default function SignUp() {
                   </p>
                 </div>
               </Grid>
-              {/* <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Role</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={role}
-                    label="Age"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value='customer'>Customer</MenuItem>
-                    <MenuItem value='admin'>Admin</MenuItem>
-                  </Select>
-                </FormControl>
-
-              </Grid> */}
-              {/* <Grid item xs={12}>
+              <Grid item xs={12}>
                 <div class="form-check">
                   <input 
                     class="form-check-input" 
-                    type="checkbox" 
-                    onChange={(e)=> {
-                      console.log(e.target.value)
-                    }}
+                    type="checkbox" value="" 
                     id="flexCheckDefault" 
+                    onClick={handleReveal}
                   />
                   <label class="form-check-label" for="flexCheckDefault">
-                    <Link >Agree to all Terms & Conditions</Link>
+                    <small>show password</small>
                   </label>
                 </div>
-              </Grid> */}
+              </Grid>
             </Grid>
             
             <Button

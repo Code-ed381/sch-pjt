@@ -120,6 +120,9 @@ function ResponsiveAppBar() {
                 <MenuItem onClick={()=> {navigate('/admin/feedback'); handleCloseNavMenu()}}>
                   <Typography textAlign="center">Feedback</Typography>
                 </MenuItem>
+                <MenuItem onClick={()=> {navigate('/products'); handleCloseNavMenu()}}>
+                  <Typography textAlign="center">Shop</Typography>
+                </MenuItem>
               </Menu>
             </Box>
             <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -160,6 +163,12 @@ function ResponsiveAppBar() {
                 >
                   Feedback
                 </Button>
+                <Button
+                  onClick={()=> navigate('/products')}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  Shop
+                </Button>
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
@@ -184,7 +193,7 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem onClick={handleCloseUserMenu} component="a" href="#/register">
+                <MenuItem onClick={handleCloseUserMenu} component="a" href="#/admin/signup">
                   <Typography textAlign="center">Register</Typography>
                 </MenuItem>
                 <MenuItem onClick={logout}>

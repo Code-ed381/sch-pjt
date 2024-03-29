@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 // import FormControlLabel from '@mui/material/FormControlLabel';
-// import Checkbox from '@mui/material/Checkbox';
+import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -42,13 +42,24 @@ function Copyright(props) {
 
 const theme = createTheme();
 
+
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [reveal, setReveal] = useState('password');
   const [errMsg, setErrMsg] = useState('');
   const [gallery, setGallery] = useState([])
   const { setAuth } = useAuth();
   const navigate = useNavigate();
+  
+  const handleReveal = ()=> {
+    if(reveal === "password") {
+      setReveal('text')
+    }
+    else {
+      setReveal('password')
+    }
+  }
 
   const randomIndex = Math.floor(Math.random() * gallery?.length);
 
@@ -116,10 +127,10 @@ export default function SignIn() {
             <CssBaseline />
             <Box
                 sx={{
-                    my: 25,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
+                  marginTop: 10,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
                 }}
             >
                 <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -152,9 +163,20 @@ export default function SignIn() {
                     onChange={(e)=> setPassword(e.target.value)}
                     name="password"
                     label="Password"
-                    type="password"
+                    type={reveal}
                     id="password"
                 />
+                <div class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" value="" 
+                  id="flexCheckDefault" 
+                  onClick={handleReveal}
+                />
+                <label class="form-check-label" for="flexCheckDefault">
+                  <small>show password</small>
+                </label>
+              </div>
                 <Button
                     fullWidth
                     variant="contained"
@@ -173,9 +195,9 @@ export default function SignIn() {
                     </Link> */}
                     </Grid>
                     <Grid item>
-                    <Link href="#/signup" variant="body2">
+                    {/* <Link href="#/admin/signup" variant="body2">
                         {"Don't have an account? Sign Up"}
-                    </Link>
+                    </Link> */}
                     </Grid>
                 </Grid>
                 </Box>

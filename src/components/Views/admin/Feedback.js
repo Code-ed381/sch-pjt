@@ -19,6 +19,8 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Swal from 'sweetalert2'
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 
 const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
@@ -130,10 +132,14 @@ export default function Feedback() {
                 <Typography sx={{ color: 'text.secondary' }}>{feedback.email} - {feedback.phone}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                <Typography variant='h6'>
+                <Typography variant='body2'>
                     {feedback.content}
                 </Typography>   
                 </AccordionDetails>
+                <AccordionActions>
+                <Button>Reply</Button>
+                <Button color="error">Delete</Button>
+                </AccordionActions>
             </Accordion>
         )}
     </div>

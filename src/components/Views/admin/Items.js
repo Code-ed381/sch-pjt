@@ -33,7 +33,7 @@ export default function Items() {
   const [category, setCategory] = useState('');
   const [itemName, setItemName] = useState('');
   const [data, setData] = useState([]);
-  const [img, setImg] = useState();
+  const [img, setImg] = useState('');
 
   const handleChange = (event) => {
     setCategory(event.target.value);
@@ -99,9 +99,10 @@ export default function Items() {
             name: itemName, 
             price: price, 
             discount: discount, 
-            category: category, 
+            category_id: category, 
             description: description, 
             quantity: quantity, 
+            img: img
         },
         ])
         .select()
@@ -134,6 +135,8 @@ export default function Items() {
             setDescription('')
             setQuantity('')
             setCategory('')
+            setImg('')
+            setDiscount('')
         }
 
     }
@@ -143,19 +146,19 @@ export default function Items() {
         {
           field: 'name',
           headerName: 'Name',
-          width: 150,
+          width: 250,
           editable: true,
         },
         {
           field: 'price',
-          headerName: 'Price',
-          width: 150,
+          headerName: 'Price($)',
+          width: 100,
           editable: true,
         },
         {
           field: 'quantity',
           headerName: 'Quantity',
-          width: 200,
+          width: 100,
           editable: true,
         },
         {
@@ -163,7 +166,7 @@ export default function Items() {
             headerName: 'Discount',
             description: 'This column has a value getter and is not sortable.',
             sortable: true,
-            width: 160,
+            width: 100,
         },
         {
             field: 'category',
@@ -177,7 +180,7 @@ export default function Items() {
             headerName: 'Description',
             description: 'This column has a value getter and is not sortable.',
             sortable: true,
-            width: 160,
+            width: 400,
         },
     ];
 
@@ -267,16 +270,7 @@ export default function Items() {
             <TextField id="outlined-basic" value={discount} onChange={(e)=> setDiscount(e.target.value)} label="Discount" variant="outlined"  />
             <TextField id="outlined-basic" value={description} onChange={(e)=> setDescription(e.target.value)} label="Description" variant="outlined"  />
             <TextField id="outlined-basic" value={quantity} onChange={(e)=> setQuantity(e.target.value)} label="Quantity" variant="outlined"  />
-            <div class="mb-3">
-                <label for="formFile" class="form-label">Select item image</label>
-                <input 
-                    class="form-control" 
-                    type="file" id="formFile" 
-                    accept=".jpg, .jpeg, .png" 
-                    onChange={(e)=> setImg(e.target.files[0])}
-                />
-            </div>
-
+            <TextField id="outlined-basic" value={img} onChange={(e)=> setImg(e.target.value)} label="Image URL" variant="outlined"  />
             <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Category</InputLabel>
                   <Select
@@ -286,11 +280,10 @@ export default function Items() {
                     label="Category"
                     onChange={(e)=> setCategory(e.target.value)}
                   >
-                    <MenuItem value='electronics'>Electronics</MenuItem>
-                    <MenuItem value='home'>Home</MenuItem>
-                    <MenuItem value='books'>Books</MenuItem>
-                    <MenuItem value='accessories'>Accessories</MenuItem>
-                    <MenuItem value='clothes'>Clothes</MenuItem>
+                    <MenuItem value='1'>Tablets</MenuItem>
+                    <MenuItem value='4'>TVs</MenuItem>
+                    <MenuItem value='3'>Smart Phones</MenuItem>
+                    <MenuItem value='2'>Laptops</MenuItem>
                   </Select>
             </FormControl>
             

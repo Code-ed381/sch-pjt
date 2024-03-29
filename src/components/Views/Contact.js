@@ -1,64 +1,114 @@
-import React, {useState} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import Swal from 'sweetalert2'
 import { useNavigate } from "react-router-dom";
 import useAuth from '../Hook/useAuth';
+import logo from '../../assets/logo.png';
 
 
 const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNudnR3anF3aW9tYnB3cXppem9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA5NzUwNDcsImV4cCI6MjAyNjU1MTA0N30.frr4AozItNRzCyJTyHLkoGzg-CcN0uukd8-JMvw97bo"
 const supabase = createClient(supabaseUrl, supabaseKey)
 
+const USER_REGEX = /^[A-Za-z]+(?:\s[A-Za-z]+)+$/;
+const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const PHONE_REGEX = /^(?:\+\d{12}|\d{10})$/;
+
+
 const Products = ()=> {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
     const [content, setContent] = useState('');
     const navigate = useNavigate();
     const { auth, setAuth } = useAuth();
     const statusMail = localStorage.getItem('email')
     const statusPass = localStorage.getItem('password')
+    const errRef = useRef();
+    const userRef = useRef();
+
+
+    const [fullname, setFullname] = useState("");
+    const [validName, setValidName] = useState(false);
+    const [userFocus, setUserFocus] = useState(false);
+
+    const [phone, setPhone] = useState(null);
+    const [validPhone, setValidPhone] = useState(false);
+    const [phoneFocus, setPhoneFocus] = useState(false);
+
+    const [email, setEmail] = useState("");
+    const [validEmail, setValidEmail] = useState(false);
+
+    useEffect(() => {
+      const result = USER_REGEX.test(fullname);
+      setValidName(result)
+    }, [fullname])
+
+    useEffect(() => {
+      const result = EMAIL_REGEX.test(email);
+      setValidEmail(result)
+    }, [email])
+
+    useEffect(() => {
+      const result = PHONE_REGEX.test(phone);
+      setValidPhone(result)
+    }, [phone])
 
     const handleSubmit = async (e)=> {
       e.preventDefault();
-
-      const { data, error } = await supabase
-      .from('feedback')
-      .insert([
-      { 
-          name: name, 
-          email: email, 
-          phone: phone, 
-          content: content, 
-      },
-      ])
-      .select()
-
-      if (error) {
+      
+      if (email != '' && content != '' && fullname != '') {
+        if (validEmail == true && validName == true && validPhone == true) {
+          const { data, error } = await supabase
+          .from('feedback')
+          .insert([
+          { 
+              name: fullname, 
+              email: email, 
+              phone: phone, 
+              content: content, 
+          },
+          ])
+          .select()
+    
+          if (error) {
+              Swal.fire({
+                  position: "top-end",
+                  icon: "error",
+                  title: "Failed to send feedback",
+                  showConfirmButton: false,
+                  timer: 1500
+              });
+          }
+          else{
+              Swal.fire({
+                  position: "top-end",
+                  icon: "success",
+                  title: "Your feedbank was sent",
+                  showConfirmButton: false,
+                  timer: 1500
+              });
+    
+              setContent('')
+              setEmail('')
+              setPhone('')
+              setFullname('')
+          }
+        } else {
           Swal.fire({
-              position: "top-end",
-              icon: "error",
-              title: "Failed to send feedback",
-              showConfirmButton: false,
-              timer: 1500
+            icon: "error",
+            title: "Invalid input values",
+            showConfirmButton: false,
+            timer: 3000
           });
+        }
       }
-      else{
-          Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: "Your feedbank was sent",
-              showConfirmButton: false,
-              timer: 1500
-          });
-
-          setContent('')
-          setEmail('')
-          setPhone('')
-          setName('')
+      else {
+        Swal.fire({
+          icon: "error",
+          title: "Fill all required fields",
+          showConfirmButton: false,
+          timer: 1500
+        });
       }
-  }
-
+    }
 
     const SignBtn = ()=> {
       if(statusMail && statusPass) {
@@ -104,7 +154,7 @@ const Products = ()=> {
         navigate('/checkout')
       }
       else {
-        navigate('/login')
+        navigate('/signin')
       }
     }
 
@@ -127,8 +177,9 @@ const Products = ()=> {
       <div class="row gy-3">
         {/* <!-- Left elements --> */}
         <div class="col-lg-2 col-sm-4 col-4">
-          <a href="https://mdbootstrap.com/" target="_blank" class="float-start">
-            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
+          <a href="#/home" target="_blank" class="float-start">
+            <img src={logo} height="50" />
+            {/* <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" /> */}
           </a>
         </div>
         {/* <!-- Left elements --> */}
@@ -203,7 +254,23 @@ const Products = ()=> {
             <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
               <div class="col-12">
                 <label for="fullname" class="form-label">Full Name <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="fullname" name="fullname" value={name} onChange={(e)=> setName(e.target.value)} required />
+                <input 
+                    type="text" 
+                    required
+                    ref={userRef}
+                    class={validName ? "form-control is-valid" : "form-control" && !fullname ? "form-control": "form-control is-invalid"}
+                    id="floatingInput" 
+                    placeholder="name@example.com"
+                    autoComplete="off"
+                    onChange={(e) => { 
+                      setFullname(e.target.value)
+                    }}
+                    aria-invalid = {validName ? "false" : "true"}
+                    aria-describedby = "uidnote"
+                    onFocus = {()=> setUserFocus(true)}
+                    onBlur = {()=> setUserFocus(false)}
+                    value={fullname}
+                  />
               </div>
               <div class="col-12 col-md-6">
                 <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
@@ -213,7 +280,20 @@ const Products = ()=> {
                       <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z" />
                     </svg>
                   </span>
-                  <input type="email" class="form-control" id="email" name="email" onChange={(e)=> setEmail(e.target.value)} value={email} required />
+                  <input 
+                    class={validEmail ? "form-control is-valid" : "form-control" && !email ? "form-control": "form-control is-invalid"}
+                    type="text" 
+                    required
+                    placeholder = "Email"
+                    autoComplete = "off" 
+                    onChange={(e) => { 
+                        setEmail(e.target.value)
+                    }}
+                    aria-invalid = {validEmail ? "false" : "true"}
+                    aria-describedby = "emailnote"
+                    id="floatingInput" 
+                    value={email}
+                  />
                 </div>
               </div>
               <div class="col-12 col-md-6">
@@ -224,7 +304,22 @@ const Products = ()=> {
                       <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
                     </svg>
                   </span>
-                  <input type="tel" class="form-control" id="phone" onChange={(e)=> setPhone(e.target.value)} name="phone" value={phone} />
+                  <input 
+                    class={validPhone ? "form-control is-valid" : "form-control" && !phone ? "form-control": "form-control is-invalid"}
+                    type="tel" 
+                    required
+                    placeholder = "Phone"
+                    autoComplete = "off" 
+                    onChange={(e) => { 
+                        setPhone(e.target.value)
+                    }}
+                    aria-invalid = {validPhone ? "false" : "true"}
+                    aria-describedby = "emailnote"
+                    id="floatingInput" 
+                    value={phone}
+                    onFocus = {()=> setPhoneFocus(true)}
+                    onBlur = {()=> setPhoneFocus(false)}
+                  />
                 </div>
               </div>
               {/* <div class="col-12">
@@ -337,11 +432,11 @@ const Products = ()=> {
         {/* <!-- Grid column --> */}
         <div class="col-12 col-lg-3 col-sm-12 mb-2">
           {/* <!-- Content --> */}
-          <a href="https://mdbootstrap.com/" target="_blank" class="">
-            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
+          <a href="#/home" target="_blank" class="">
+            <img src={logo} height="100" />
           </a>
           <p class="mt-2 text-light">
-            © 2023 Copyright: MDBootstrap.com
+            © 2024 Copyright: E-commerce Project
           </p>
         </div>
         {/* <!-- Grid column -->
@@ -367,9 +462,10 @@ const Products = ()=> {
             Quick Links
           </h6>
           <ul class="list-unstyled mb-4">
-            <li><a class="text-light" href="#">Home</a></li>
-            <li><a class="text-light" href="#">Shop</a></li>
-            <li><a class="text-light" href="#">Contact</a></li>
+            <li><a class="text-light" href="#/home">Home</a></li>
+            <li><a class="text-light" href="#/products">Shop</a></li>
+            <li><a class="text-light" href="#/contact">Contact</a></li>
+            <li><a class="text-light" href="#/admin/customers">Admin</a></li>
           </ul>
         </div>
         {/* <!-- Grid column -->

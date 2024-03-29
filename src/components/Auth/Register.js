@@ -18,6 +18,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Swal from 'sweetalert2';
 
 
 const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
@@ -55,6 +56,7 @@ export default function Register() {
   const errRef = useRef();
   const [checked, setChecked] = useState(false)
   const [role, setRole] = useState('customer')
+  
 
   const handleChange = (event) => {
     setRole(event.target.value);
@@ -140,14 +142,29 @@ export default function Register() {
                 
         
         if(error) {
-          throw new Error(error.message);
+          setErrMsg(error.message);
         }
-
-
-        console.log(data)
-        
-        navigate('/admin/customers');
-        
+        else{
+          Swal.fire({
+            title: "Success",
+            text: "New Admin added",
+            icon: "success",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Swal.fire({
+              //   title: "Deleted!",
+              //   text: "Your file has been deleted.",
+              //   icon: "success"
+              // });
+              navigate('/admin/customers');
+            }
+          });
+          
+        }  
       }
       catch (err) {
         console.log(err)

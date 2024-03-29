@@ -3,7 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import Swal from 'sweetalert2'
 import { useNavigate } from "react-router-dom";
 import useAuth from '../Hook/useAuth';
-import image1 from '../../assets/image1.jpg'
+import image1 from '../../assets/image1.jpg';
+import logo from '../../assets/logo.png';
 
 
 const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
@@ -142,8 +143,9 @@ const Checkout = ()=> {
       <div class="row gy-3">
         {/* <!-- Left elements --> */}
         <div class="col-lg-2 col-sm-4 col-4">
-          <a href="https://mdbootstrap.com/" target="_blank" class="float-start">
-            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
+          <a href="#/home" target="_blank" class="float-start">
+            <img src={logo} height="50" />
+            {/* <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" /> */}
           </a>
         </div>
         {/* <!-- Left elements --> */}
@@ -153,7 +155,7 @@ const Checkout = ()=> {
           <div class="d-flex float-end">
           {SignBtn()}
             {/* <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank"> <i class="bi bi-suit-heart-fill m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Wishlist</p> </a> */}
-            <button onClick={handleCheckout} class="btn btn-outlined-primary py-1 px-3 nav-link d-flex align-items-center"> <i class="bi bi-cart4 m-1 me-md-2"></i><p class="d-none d-md-block mb-0">My cart</p> </button>
+            {/* <button onClick={handleCheckout} class="btn btn-outlined-primary py-1 px-3 nav-link d-flex align-items-center"> <i class="bi bi-cart4 m-1 me-md-2"></i><p class="d-none d-md-block mb-0">My cart</p> </button> */}
           </div>
           {/* <h5 class="d-flex float-end m-2 text-primary">Hello</h5> */}
         </div>
@@ -457,7 +459,7 @@ const Checkout = ()=> {
                         <div class="row">
 
                         <div class="col-lg-7">
-                            <h5 class="mb-3"><a href="#/product" class="text-body"><i
+                            <h5 class="mb-3"><a href="#/products" class="text-body"><i
                                 class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
                             <hr/>
 
@@ -466,10 +468,10 @@ const Checkout = ()=> {
                                 <p class="mb-1">Shopping cart</p>
                                 <p class="mb-0">You have {items.length} items in your cart</p>
                             </div>
-                            <div>
+                            {/* <div>
                                 <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!"
                                     class="text-body">price <i class="fas fa-angle-down mt-1"></i></a></p>
-                            </div>
+                            </div> */}
                             </div>
 
 
@@ -480,20 +482,20 @@ const Checkout = ()=> {
                                         <div class="d-flex flex-row align-items-center">
                                             <div>
                                             <img
-                                                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                                                src={item.items.img}
                                                 class="img-fluid rounded-3" alt="Shopping item" style={{width: '65px'}}/>
                                             </div>
                                             <div class="ms-3">
-                                            <h5>{item.items.name}</h5>
+                                            <h6>{item.items.name}</h6>
                                             <p class="small mb-0">{item.items.description}</p>
                                             </div>
                                         </div>
                                         <div class="d-flex flex-row align-items-center">
                                             <div style={{width: '50px'}}>
-                                            <h5 class="fw-normal mb-0">2</h5>
+                                            <h6 class="fw-normal mb-0">{item.quantity}</h6>
                                             </div>
                                             <div style={{width: '80px'}}>
-                                            <h5 class="mb-0">${item.items.price}</h5>
+                                            <h6 class="mb-0">${item.items.price}</h6>
                                             </div>
                                             <a href="#!" style={{color: '#cecece'}}><i class="fas fa-trash-alt"></i></a>
                                         </div>
@@ -707,11 +709,11 @@ const Checkout = ()=> {
         {/* <!-- Grid column --> */}
         <div class="col-12 col-lg-3 col-sm-12 mb-2">
           {/* <!-- Content --> */}
-          <a href="https://mdbootstrap.com/" target="_blank" class="">
-            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
+          <a href="#/home" target="_blank" class="">
+            <img src={logo} height="100" />
           </a>
           <p class="mt-2 text-light">
-            © 2023 Copyright: MDBootstrap.com
+            © 2024 Copyright: E-commerce Project
           </p>
         </div>
         {/* <!-- Grid column -->
@@ -737,9 +739,10 @@ const Checkout = ()=> {
             Quick Links
           </h6>
           <ul class="list-unstyled mb-4">
-            <li><a class="text-light" href="#">Home</a></li>
-            <li><a class="text-light" href="#">Shop</a></li>
-            <li><a class="text-light" href="#">Contact</a></li>
+            <li><a class="text-light" href="#/home">Home</a></li>
+            <li><a class="text-light" href="#/products">Shop</a></li>
+            <li><a class="text-light" href="#/contact">Contact</a></li>
+            <li><a class="text-light" href="#/admin/customers">Admin</a></li>
           </ul>
         </div>
         {/* <!-- Grid column -->

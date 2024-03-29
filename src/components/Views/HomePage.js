@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { createClient } from '@supabase/supabase-js';
 import Swal from 'sweetalert2';
-import image1 from '../../assets/image1.jpg'
+import image1 from '../../assets/image1.jpg';
+import logo from '../../assets/logo.png';
 
 const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNudnR3anF3aW9tYnB3cXppem9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA5NzUwNDcsImV4cCI6MjAyNjU1MTA0N30.frr4AozItNRzCyJTyHLkoGzg-CcN0uukd8-JMvw97bo"
@@ -42,6 +43,7 @@ const HomePage = ()=> {
       let { data: items, error } = await supabase
       .from('items')
       .select('*')
+      .range(0, 3)
 
       setItems(items)
       console.log(items)
@@ -85,7 +87,7 @@ const HomePage = ()=> {
         navigate('/checkout')
       }
       else {
-        navigate('/login')
+        navigate('/signin')
       }
     }
 
@@ -110,8 +112,9 @@ const HomePage = ()=> {
       <div class="row gy-3">
         {/* <!-- Left elements --> */}
         <div class="col-lg-2 col-sm-4 col-4">
-          <a href="https://mdbootstrap.com/" target="_blank" class="float-start">
-            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
+          <a href="#/home" target="_blank" class="float-start">
+            <img src={logo} height="50" />
+            {/* <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" /> */}
           </a>
         </div>
         {/* <!-- Left elements -->
@@ -213,10 +216,10 @@ const HomePage = ()=> {
       {items?.map((item)=> 
         <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
           <div class="card w-100 my-2 shadow-2-strong">
-            <img src={image1} class="card-img-top" style={{aspectRatio: 1 / 1}} />
+            <img src={item.img} class="card-img-top" style={{aspectRatio: 1 / 1}} />
             <div class="card-body d-flex flex-column">
-              <h5 class="card-title">{item.description}</h5>
-              <p class="card-text">${item.price}</p>
+              <h5 class="card-title">{item.name}</h5>
+              <h6 class="card-text"><strong>${item.price}</strong></h6>
               <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
               <button 
                 onClick={async ()=> {
@@ -232,7 +235,7 @@ const HomePage = ()=> {
                       .select()
                   }
                   else {
-                    navigate('/login')
+                    navigate('/signin')
                   }
                 } }
                 class="btn btn-primary shadow-0 me-1"
@@ -426,11 +429,11 @@ const HomePage = ()=> {
         {/* <!-- Grid column --> */}
         <div class="col-12 col-lg-3 col-sm-12 mb-2">
           {/* <!-- Content --> */}
-          <a href="https://mdbootstrap.com/" target="_blank" class="">
-            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
+          <a href="#/home" target="_blank" class="">
+            <img src={logo} height="100" />
           </a>
           <p class="mt-2 text-dark">
-            © 2023 Copyright: MDBootstrap.com
+            © 2024 Copyright: E-commerce Project
           </p>
         </div>
         {/* <!-- Grid column -->
@@ -456,9 +459,10 @@ const HomePage = ()=> {
             Quick Links
           </h6>
           <ul class="list-unstyled mb-4">
-            <li><a class="text-muted" href="#">Home</a></li>
-            <li><a class="text-muted" href="#">Shop</a></li>
-            <li><a class="text-muted" href="#">Contact</a></li>
+            <li><a class="text-muted" href="#/home">Home</a></li>
+            <li><a class="text-muted" href="#/products">Shop</a></li>
+            <li><a class="text-muted" href="#/contact">Contact</a></li>
+            <li><a class="text-muted" href="#/admin/customers">Admin</a></li>
           </ul>
         </div>
         {/* <!-- Grid column -->
