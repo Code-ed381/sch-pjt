@@ -79,7 +79,7 @@ const HomePage = ()=> {
         timer: 1500
       });
 
-      navigate('/home')
+      navigate('/')
     }
 
     const handleCheckout = ()=> {
@@ -112,7 +112,7 @@ const HomePage = ()=> {
       <div class="row gy-3">
         {/* <!-- Left elements --> */}
         <div class="col-lg-2 col-sm-4 col-4">
-          <a href="#/home" target="_blank" class="float-start">
+          <a href="#/" target="_blank" class="float-start">
             <img src={logo} height="50" />
             {/* <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" /> */}
           </a>
@@ -169,7 +169,7 @@ const HomePage = ()=> {
         {/* <!-- Left links --> */}
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link text-dark" aria-current="page" href="#/home">Home</a>
+            <a class="nav-link text-dark" aria-current="page" href="#/">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link text-dark" href="#/products">Shop</a>
@@ -429,7 +429,7 @@ const HomePage = ()=> {
         {/* <!-- Grid column --> */}
         <div class="col-12 col-lg-3 col-sm-12 mb-2">
           {/* <!-- Content --> */}
-          <a href="#/home" target="_blank" class="">
+          <a href="#/" target="_blank" class="">
             <img src={logo} height="100" />
           </a>
           <p class="mt-2 text-dark">
@@ -459,7 +459,7 @@ const HomePage = ()=> {
             Quick Links
           </h6>
           <ul class="list-unstyled mb-4">
-            <li><a class="text-muted" href="#/home">Home</a></li>
+            <li><a class="text-muted" href="#/">Home</a></li>
             <li><a class="text-muted" href="#/products">Shop</a></li>
             <li><a class="text-muted" href="#/contact">Contact</a></li>
             <li><a class="text-muted" href="#/admin/customers">Admin</a></li>

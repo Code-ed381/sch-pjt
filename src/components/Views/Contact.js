@@ -146,7 +146,7 @@ const Products = ()=> {
         timer: 1500
       });
 
-      navigate('/home')
+      navigate('/')
     }
 
     const handleCheckout = ()=> {
@@ -177,7 +177,7 @@ const Products = ()=> {
       <div class="row gy-3">
         {/* <!-- Left elements --> */}
         <div class="col-lg-2 col-sm-4 col-4">
-          <a href="#/home" target="_blank" class="float-start">
+          <a href="#/" target="_blank" class="float-start">
             <img src={logo} height="50" />
             {/* <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" /> */}
           </a>
@@ -220,7 +220,7 @@ const Products = ()=> {
       {/* <!-- Breadcrumb --> */}
       <nav class="d-flex mb-2">
         <h6 class="mb-0">
-          <a href="#/home" class="text-white-50">Home</a>
+          <a href="#/" class="text-white-50">Home</a>
           <span class="text-white-50 mx-2"> </span>
           <a href="#/products" class="text-white-50"><u>Shop</u></a>
           <span class="text-white-50 mx-2"> </span>
@@ -432,7 +432,7 @@ const Products = ()=> {
         {/* <!-- Grid column --> */}
         <div class="col-12 col-lg-3 col-sm-12 mb-2">
           {/* <!-- Content --> */}
-          <a href="#/home" target="_blank" class="">
+          <a href="#/" target="_blank" class="">
             <img src={logo} height="100" />
           </a>
           <p class="mt-2 text-light">
@@ -462,7 +462,7 @@ const Products = ()=> {
             Quick Links
           </h6>
           <ul class="list-unstyled mb-4">
-            <li><a class="text-light" href="#/home">Home</a></li>
+            <li><a class="text-light" href="#/">Home</a></li>
             <li><a class="text-light" href="#/products">Shop</a></li>
             <li><a class="text-light" href="#/contact">Contact</a></li>
             <li><a class="text-light" href="#/admin/customers">Admin</a></li>
