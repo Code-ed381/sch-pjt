@@ -443,6 +443,25 @@ const Products = ()=> {
                         },
                       ])
                       .select()
+
+                      if(error) {
+                        Swal.fire({
+                          icon: "error",
+                          title: "Can't add item to cart",
+                          text: "Try again later",
+                          showConfirmButton: false,
+                          timer: 1500
+                        });
+                      }
+                      else {
+                        Swal.fire({
+                          position: "top-end",
+                          icon: "success",
+                          title: "Added to cart",
+                          showConfirmButton: false,
+                          timer: 1500
+                        });
+                      }
                   }
                   else {
                     navigate('/signin')
