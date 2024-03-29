@@ -19,7 +19,7 @@ import Index from "./components/Index";
 const App = createHashRouter([
   {
     index: 'true',
-    path: 'home',
+    path: '/',
     element: <HomePage/>
   },
   {

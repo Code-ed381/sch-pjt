@@ -20,7 +20,7 @@ const NotFound = ()=> {
                         The page you’re looking for doesn’t exist.
                     </p>
                     <button onClick={()=> navigate(-1)} class="btn btn-primary m-3">Go Back</button>
-                    <button onClick={()=> navigate('/home')} class="btn btn-primary">Home</button>
+                    <button onClick={()=> navigate('/')} class="btn btn-primary">Home</button>
                 </div>
 
             </div>
