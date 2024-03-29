@@ -48,7 +48,7 @@ function App() {
             // Compare the values associated with the 'email' and 'password' keys
             if (customer.password === password) {
                 localStorage.setItem('password', 'true');
-                localStorage.setItem('id', customer.id);
+                localStorage.setItem('id', customer.id); 
             }
         }
 
