@@ -59,7 +59,7 @@ function App() {
         console.log(validpassword)
 
         if (validmail && validpassword) {
-            navigate('/home')
+            navigate('/')
         }
         else(
             setErrMsg('Invalid username or password')
