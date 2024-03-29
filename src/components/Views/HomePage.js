@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import useAuth from '../Hook/useAuth';
 import { createClient } from '@supabase/supabase-js';
 import Swal from 'sweetalert2';
 import image1 from '../../assets/image1.jpg'
@@ -13,8 +12,6 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 
 const HomePage = ()=> {
     const navigate = useNavigate();
-    const { auth, setAuth } = useAuth();
-    const [sign, setSign] = useState('Sign In')
     const statusMail = localStorage.getItem('email')
     const statusPass = localStorage.getItem('password')
     const [items, setItems] = useState([])
@@ -39,7 +36,7 @@ const HomePage = ()=> {
           </button>
         )
       }
-    } 
+    }  
 
     const getItems = async ()=> {
       let { data: items, error } = await supabase
@@ -47,6 +44,8 @@ const HomePage = ()=> {
       .select('*')
 
       setItems(items)
+      console.log(items)
+      console.log(error)
         
     }
 
@@ -211,7 +210,7 @@ const HomePage = ()=> {
     </header>
 
     <div class="row">
-      {items.map((item)=> 
+      {items?.map((item)=> 
         <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
           <div class="card w-100 my-2 shadow-2-strong">
             <img src={image1} class="card-img-top" style={{aspectRatio: 1 / 1}} />

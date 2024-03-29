@@ -1,4 +1,4 @@
-import {createHashRouter, Navigate} from "react-router-dom";
+import {createHashRouter} from "react-router-dom";
 import UserLogin from "./components/Auth/Login";
 import SignIn from "./components/Auth/SignIn";
 import SignUp from "./components/Auth/SignUp";
@@ -18,69 +18,74 @@ import Index from "./components/Index";
 
 const App = createHashRouter([
   {
-    index: 'true',
-    path: 'home',
-    element: <HomePage/>
-  },
-  {
-    path:'login',
-    element: <SignIn/>
-  },
-  {
-    path:'register',
-    element: <Register/>
-  },
-  {
-    path:'signup',
-    element: <SignUp/>
-  },
-  {
-    path:'reset-password',
-    element: <ResetPassword/>
-  },
-  {
-    path: 'products',
-    element: <Products/>
-  },
-  {
-    path: 'checkout',
-    element: <Checkout/>
-  },
-  {
-    path: 'contact',
-    element: <Contact/>
-  },
-  {
-    path: 'signin',
-    element: <UserLogin/>
-  },
-  {
-    element: <RequireAuth/>,
+    path: '/',
     children: [
       {
-        path: 'admin/',
-        element: <Index/>,
+        index: 'true',
+        path: 'home',
+        element: <HomePage/>
+      },
+      {
+        path:'login',
+        element: <SignIn/>
+      },
+      {
+        path:'register',
+        element: <Register/>
+      },
+      {
+        path:'signup',
+        element: <SignUp/>
+      },
+      {
+        path:'reset-password',
+        element: <ResetPassword/>
+      },
+      {
+        path: 'products',
+        element: <Products/>
+      },
+      {
+        path: 'checkout',
+        element: <Checkout/>
+      },
+      {
+        path: 'contact',
+        element: <Contact/>
+      },
+      {
+        path: 'signin',
+        element: <UserLogin/>
+      },
+      {
+        element: <RequireAuth/>,
         children: [
           {
-            path: 'feedback',
-            element: <Feedback/>
-          },
-          {
-            path: 'customers',
-            element: <Customers/>
-          },
-          {
-            path: 'items',
-            element: <Items/>
-          },
-        ]
-      }
-      ]
-    },
-    {
-      path: '*',
-      element: <NotFound/>
-    }
+            path: 'admin/',
+            element: <Index/>,
+            children: [
+              {
+                path: 'feedback',
+                element: <Feedback/>
+              },
+              {
+                path: 'customers',
+                element: <Customers/>
+              },
+              {
+                path: 'items',
+                element: <Items/>
+              },
+            ]
+          }
+          ]
+      },
+    ]
+  },
+  {
+    path: '*',
+    element: <NotFound/>
+  }
     
 ])
 

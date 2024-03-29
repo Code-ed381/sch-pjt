@@ -33,6 +33,7 @@ export default function Items() {
   const [category, setCategory] = useState('');
   const [itemName, setItemName] = useState('');
   const [data, setData] = useState([]);
+  const [img, setImg] = useState();
 
   const handleChange = (event) => {
     setCategory(event.target.value);
@@ -113,6 +114,7 @@ export default function Items() {
                 showConfirmButton: false,
                 timer: 1500
             });
+            console.log(error.message)
         }
         else{
             Swal.fire({
@@ -123,7 +125,10 @@ export default function Items() {
                 timer: 1500
             });
 
+
+            console.log(img)
             getItems();
+            // handleImageUpload()
             setItemName('')
             setPrice('')
             setDescription('')
@@ -188,6 +193,22 @@ export default function Items() {
         { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
     ];
 
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        setImg(file)
+        console.log(file)
+    };
+
+    const handleImageUpload = async ()=> {
+        const { data, error } = await supabase
+        .storage
+        .from('image')
+        .upload(img, img, {
+            cacheControl: '3600',
+            upsert: false
+        })
+    }
+
   return (
     <>
         <Paper>
@@ -246,15 +267,24 @@ export default function Items() {
             <TextField id="outlined-basic" value={discount} onChange={(e)=> setDiscount(e.target.value)} label="Discount" variant="outlined"  />
             <TextField id="outlined-basic" value={description} onChange={(e)=> setDescription(e.target.value)} label="Description" variant="outlined"  />
             <TextField id="outlined-basic" value={quantity} onChange={(e)=> setQuantity(e.target.value)} label="Quantity" variant="outlined"  />
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Select item image</label>
+                <input 
+                    class="form-control" 
+                    type="file" id="formFile" 
+                    accept=".jpg, .jpeg, .png" 
+                    onChange={(e)=> setImg(e.target.files[0])}
+                />
+            </div>
 
             <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Role</InputLabel>
+                  <InputLabel id="demo-simple-select-label">Category</InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={category}
-                    label="Age"
-                    onChange={handleChange}
+                    label="Category"
+                    onChange={(e)=> setCategory(e.target.value)}
                   >
                     <MenuItem value='electronics'>Electronics</MenuItem>
                     <MenuItem value='home'>Home</MenuItem>
