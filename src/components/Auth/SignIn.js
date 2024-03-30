@@ -85,7 +85,7 @@ export default function SignIn() {
 
       setAuth(user)
 
-      navigate(-1)
+      navigate('/admin/items')
 
       console.log(session)
     }

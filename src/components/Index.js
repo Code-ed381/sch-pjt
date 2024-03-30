@@ -78,7 +78,7 @@ function ResponsiveAppBar() {
                 textDecoration: 'none',
               }}
             >
-              LOGO
+              ADMIN
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -174,7 +174,7 @@ function ResponsiveAppBar() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt="Remy Sharp" src="https://api.api-ninjas.com/v1/randomimage?category=nature" />
                 </IconButton>
               </Tooltip>
               <Menu
