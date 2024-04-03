@@ -41,6 +41,9 @@ function App() {
                 localStorage.setItem('email', 'true');
                 // navigate('/home')
             }
+            else {
+                localStorage.setItem('email', 'false');
+            }
         }
 
         // Iterate through each user object in the array
@@ -89,13 +92,36 @@ function App() {
     }
   }
 
-  const handleReset = ()=> {
-    if(email === '') {
-        setErrMsg('Email is required'); 
+  const handleReset = async ()=> {
+    let { data: customers, error } = await supabase
+    .from('customers')
+    .select('*')
+
+    // Iterate through each user object in the array
+    for (const customer of customers) {
+        // Compare the values associated with the 'email' and 'password' keys
+        if (customer.email === email) {
+            localStorage.setItem('email', 'true');
+            // navigate('/home')
+        }
+        else {
+            localStorage.setItem('email', 'false');
+        }
+    }
+
+    const validmail = localStorage.getItem('email')
+
+    if(email === '' ) {
+        setErrMsg('Enter a valid email'); 
     }
     else {
-        localStorage.setItem('mail', email);
-        navigate('/reset-password');
+        if (validmail === 'false') {
+            setErrMsg('Invalid email')
+        }
+        else {
+            localStorage.setItem('mail', email);
+            navigate('/reset-password');
+        }
     }
   }
 

@@ -24,21 +24,21 @@ const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNudnR3anF3aW9tYnB3cXppem9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA5NzUwNDcsImV4cCI6MjAyNjU1MTA0N30.frr4AozItNRzCyJTyHLkoGzg-CcN0uukd8-JMvw97bo"
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://fullgospel.com/">
-        Full Gospel
-      </Link>{'-'}
-      <Link color="inherit" href="https://cyaneltechnologies.com/">
-        Powered by Cyanel Technologies
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+// function Copyright(props) {
+//   return (
+//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
+//       {'Copyright © '}
+//       <Link color="inherit" href="https://fullgospel.com/">
+//         Full Gospel
+//       </Link>{'-'}
+//       <Link color="inherit" href="https://cyaneltechnologies.com/">
+//         Powered by Cyanel Technologies
+//       </Link>{' '}
+//       {new Date().getFullYear()}
+//       {'.'}
+//     </Typography>
+//   );
+// }
 
 const theme = createTheme();
 
@@ -46,6 +46,7 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('');
+  const [data, setData] = useState([]);
   const [errMsg, setErrMsg] = useState('');
   const { setAuth } = useAuth();
   const navigate = useNavigate();
@@ -54,10 +55,44 @@ export default function ResetPassword() {
   const [validPwd, setValidPwd] = useState(false);
   const [pwdFocus, setPwdFocus] = useState(false);
 
+  const getMail = async ()=> {
+    let { data: customers, error } = await supabase
+    .from('customers')
+    .select('email')  
+
+    if (error) {
+        Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Failed to retrieve customer",
+            showConfirmButton: false,
+            timer: 1500
+        });
+    }
+    else {
+        setData(customers)
+        console.log(customers)
+    }
+}
+
+  useEffect(() => {
+    const controller = new AbortController();
+    var isMounted = true
+
+    getMail()
+
+    return () => {
+        isMounted = false
+        controller.abort();
+    }
+}, [])
+
   useEffect(() => {
     const result = PWD_REGEX.test(password);
     setValidPwd(result);
-}, [password])
+  }, [password])
+
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
