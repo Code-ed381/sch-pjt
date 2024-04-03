@@ -538,9 +538,6 @@ const Products = ()=> {
         {/* <!-- Grid column --> */}
         <div class="col-12 col-lg-3 col-sm-12 mb-2">
           {/* <!-- Content --> */}
-          <a href="#/" target="_blank" class="">
-            <img src={logo} height="100" />
-          </a>
           <p class="mt-2 text-light">
             © 2024 Copyright: E-commerce Project
           </p>
@@ -561,7 +558,7 @@ const Products = ()=> {
         </div>
         {/* <!-- Grid column -->
 
-        <!-- Grid column --> */}
+<!-- Grid column --> */}
         <div class="col-6 col-sm-4 col-lg-2">
           {/* <!-- Links --> */}
           <h6 class="text-uppercase text-light fw-bold mb-2">
@@ -571,30 +568,33 @@ const Products = ()=> {
         </div>
         {/* <!-- Grid column -->
 
-        <!-- Grid column --> */}
+<!-- Grid column --> */}
         <div class="col-6 col-sm-4 col-lg-2">
           {/* <!-- Links --> */}
           {/* <h6 class="text-uppercase text-light fw-bold mb-2">
             Admin
-          </h6>
-          <ul class="list-unstyled mb-4">
+            </h6>
+            <ul class="list-unstyled mb-4">
             <li><a class="text-light" href="#">Portal</a></li>
           </ul> */}
         </div>
         {/* <!-- Grid column -->
 
 
-        <!-- Grid column --> */}
+<!-- Grid column --> */}
         <div class="col-12 col-sm-12 col-lg-3">
+<a href="#/" target="_blank" class="">
+  <img src={logo} height="200" />
+</a>
           {/* <!-- Links --> */}
-          <h6 class="text-uppercase text-light fw-bold mb-2">Newsletter</h6>
+          {/* <h6 class="text-uppercase text-light fw-bold mb-2">Newsletter</h6>
           <p class="text-light">Stay in touch with latest updates about our products and offers</p>
           <div class="input-group mb-3">
             <input type="email" class="form-control border" placeholder="Email" aria-label="Email" aria-describedby="button-addon2" />
             <button class="btn btn-light border shadow-0" type="button" id="button-addon2" data-mdb-ripple-color="dark">
               Join
             </button>
-          </div>
+          </div> */}
         </div>
         {/* <!-- Grid column --> */}
       </div>

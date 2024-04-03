@@ -22,6 +22,7 @@ function App() {
   const [isRevealPwd, setIsRevealPwd] = useState('bx bx-hide eye-icon');
   const { setAuth } = useAuth();
   const navigate = useNavigate();
+  const mails = [];
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -92,29 +93,32 @@ function App() {
   const handleReset = async ()=> {
     let { data: customers, error } = await supabase
     .from('customers')
-    .select('*')
+    .select('email')
+
+    console.log(customers)
 
     // Iterate through each user object in the array
-    for (const customer of customers) {
-        // Compare the values associated with the 'email' and 'password' keys
-        if (customer.email === email) {
+    for (const email of customers) {
+        mails.push(email.email)
+        if (email === email) {
             localStorage.setItem('email', 'true');
-            // navigate('/home')
         }
     }
 
+    console.log(mails)
+    
     const validmail = localStorage.getItem('email')
 
     if(email === '' ) {
         setErrMsg('Enter a valid email'); 
     }
     else {
-        if (validmail === 'false') {
-            setErrMsg('Invalid email')
-        }
-        else {
+        if (mails.includes(email)) {
             localStorage.setItem('mail', email);
             navigate('/reset-password');
+        }
+        else {
+            setErrMsg('Invalid email')
         }
     }
   }
