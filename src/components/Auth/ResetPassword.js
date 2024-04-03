@@ -55,37 +55,6 @@ export default function ResetPassword() {
   const [validPwd, setValidPwd] = useState(false);
   const [pwdFocus, setPwdFocus] = useState(false);
 
-  const getMail = async ()=> {
-    let { data: customers, error } = await supabase
-    .from('customers')
-    .select('email')  
-
-    if (error) {
-        Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: "Failed to retrieve customer",
-            showConfirmButton: false,
-            timer: 1500
-        });
-    }
-    else {
-        setData(customers)
-        console.log(customers)
-    }
-}
-
-  useEffect(() => {
-    const controller = new AbortController();
-    var isMounted = true
-
-    getMail()
-
-    return () => {
-        isMounted = false
-        controller.abort();
-    }
-}, [])
 
   useEffect(() => {
     const result = PWD_REGEX.test(password);
