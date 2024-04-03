@@ -87,19 +87,18 @@ export default function SignUp() {
     }
   }
 
-
   useEffect(() => {
-      userRef.current.focus()
+    userRef.current.focus()
   }, [])
 
   useEffect(() => {
-      const result = USER_REGEX.test(fullname);
-      setValidName(result)
+    const result = USER_REGEX.test(fullname);
+    setValidName(result)
   }, [fullname])
 
   useEffect(() => {
-      const result = EMAIL_REGEX.test(email);
-      setValidEmail(result)
+    const result = EMAIL_REGEX.test(email);
+    setValidEmail(result)
   }, [email])
 
   useEffect(() => {
@@ -108,14 +107,14 @@ export default function SignUp() {
   }, [phone])
 
   useEffect(() => {
-      const result = PWD_REGEX.test(pwd);
-      setValidPwd(result);
-      const match = pwd === matchPwd;
-      setValidMatch(match);
+    const result = PWD_REGEX.test(pwd);
+    setValidPwd(result);
+    const match = pwd === matchPwd;
+    setValidMatch(match);
   }, [pwd, matchPwd])
 
   useEffect(() => {
-      setErrMsg('')
+    setErrMsg('')
   }, [ fullname, pwd, matchPwd])
 
   const navigate = useNavigate() 
@@ -222,12 +221,28 @@ export default function SignUp() {
                     value={fullname}
                   />
                   <label for="floatingInput">Full name</label>
-                  <p id="uidnote" className={userFocus && fullname && !validName ? "instructions": "offscreen"}>
-                    <i class="ti-info-alt" style={{margin: '5px'}}></i>
-                    4 to 24 characters.<br/>
-                    Must begin with a letter.<br/>
-                    Must be 2 names.
-                  </p>
+                </div>
+              </Grid>
+              <Grid item xs={12}>
+                <div class="form-floating">
+                  <input 
+                    type="text" 
+                    required
+                    ref={userRef}
+                    class={validName ? "form-control is-valid" : "form-control" && !fullname ? "form-control": "form-control is-invalid"}
+                    id="floatingInput" 
+                    placeholder="name@example.com"
+                    autoComplete="off"
+                    onChange={(e) => { 
+                      setFullname(e.target.value)
+                    }}
+                    aria-invalid = {validName ? "false" : "true"}
+                    aria-describedby = "uidnote"
+                    onFocus = {()=> setUserFocus(true)}
+                    onBlur = {()=> setUserFocus(false)}
+                    value={fullname}
+                  />
+                  <label for="floatingInput">Full name</label>
                 </div>
               </Grid>
               <Grid item xs={12}>

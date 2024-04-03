@@ -131,6 +131,28 @@ const Products = ()=> {
       }
     } 
 
+    const Admin = ()=> {
+      if(statusMail && statusPass) {
+        return(
+          <ul class="list-unstyled mb-4">
+          <li><a class="text-light" href="#/">Home</a></li>
+          <li><a class="text-light" href="#/products">Shop</a></li>
+          <li><a class="text-light" href="#/contact">Contact</a></li>
+        </ul>
+        )
+      }
+      else {
+        return(
+          <ul class="list-unstyled mb-4">
+          <li><a class="text-light" href="#/">Home</a></li>
+          <li><a class="text-light" href="#/products">Shop</a></li>
+          <li><a class="text-light" href="#/contact">Contact</a></li>
+          <li><a class="text-light" href="#/admin/customers">Admin</a></li>
+        </ul>
+        )
+      }
+    }  
+
     const handleLogin = ()=> {
       navigate('/signin')
     }
@@ -461,12 +483,7 @@ const Products = ()=> {
           <h6 class="text-uppercase text-light fw-bold mb-2">
             Quick Links
           </h6>
-          <ul class="list-unstyled mb-4">
-            <li><a class="text-light" href="#/">Home</a></li>
-            <li><a class="text-light" href="#/products">Shop</a></li>
-            <li><a class="text-light" href="#/contact">Contact</a></li>
-            <li><a class="text-light" href="#/admin/customers">Admin</a></li>
-          </ul>
+          {Admin()}
         </div>
         {/* <!-- Grid column -->
 

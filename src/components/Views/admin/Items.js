@@ -169,13 +169,6 @@ export default function Items() {
             width: 100,
         },
         {
-            field: 'category',
-            headerName: 'Category',
-            description: 'This column has a value getter and is not sortable.',
-            sortable: true,
-            width: 160,
-        },
-        {
             field: 'description',
             headerName: 'Description',
             description: 'This column has a value getter and is not sortable.',
@@ -222,18 +215,18 @@ export default function Items() {
                 <Button startIcon={<AddIcon/>} variant='contained' onClick={handleOpen}> Add Item</Button>
             </div>
             <div class="row">
-                <Box sx={{ height: 400, width: '100%' }}>
+                <Box sx={{ height: 700, width: '100%' }}>
                     <DataGrid
                         rows={data}
                         columns={columns}
                         initialState={{
                         pagination: {
                             paginationModel: {
-                            pageSize: 5,
+                            pageSize: 10,
                             },
                         },
                         }}
-                        pageSizeOptions={[5]}
+                        pageSizeOptions={[10]}
                         checkboxSelection
                         disableRowSelectionOnClick
                     />

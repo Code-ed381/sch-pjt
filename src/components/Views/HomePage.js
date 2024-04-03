@@ -10,7 +10,6 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 
-
 const HomePage = ()=> {
     const navigate = useNavigate();
     const statusMail = localStorage.getItem('email')
@@ -35,6 +34,28 @@ const HomePage = ()=> {
                 class="btn btn-primary me-1 py-1 px-3 nav-link d-flex align-items-center text-white" 
             > <i class="bi bi-person-fill m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Sign In</p> 
           </button>
+        )
+      }
+    }  
+
+    const Admin = ()=> {
+      if(statusMail && statusPass) {
+        return(
+          <ul class="list-unstyled mb-4">
+          <li><a class="text-muted" href="#/">Home</a></li>
+          <li><a class="text-muted" href="#/products">Shop</a></li>
+          <li><a class="text-muted" href="#/contact">Contact</a></li>
+        </ul>
+        )
+      }
+      else {
+        return(
+          <ul class="list-unstyled mb-4">
+          <li><a class="text-muted" href="#/">Home</a></li>
+          <li><a class="text-muted" href="#/products">Shop</a></li>
+          <li><a class="text-muted" href="#/contact">Contact</a></li>
+          <li><a class="text-muted" href="#/admin/customers">Admin</a></li>
+        </ul>
         )
       }
     }  
@@ -477,12 +498,7 @@ const HomePage = ()=> {
           <h6 class="text-uppercase text-dark fw-bold mb-2">
             Quick Links
           </h6>
-          <ul class="list-unstyled mb-4">
-            <li><a class="text-muted" href="#/">Home</a></li>
-            <li><a class="text-muted" href="#/products">Shop</a></li>
-            <li><a class="text-muted" href="#/contact">Contact</a></li>
-            <li><a class="text-muted" href="#/admin/customers">Admin</a></li>
-          </ul>
+          {Admin()}
         </div>
         {/* <!-- Grid column -->
 
