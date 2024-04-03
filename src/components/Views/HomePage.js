@@ -15,7 +15,9 @@ const HomePage = ()=> {
     const statusMail = localStorage.getItem('email')
     const statusPass = localStorage.getItem('password')
     const [items, setItems] = useState([])
+    const [customer, setCustomer] = useState([])
     const id = localStorage.getItem('id')
+    const validmail = localStorage.getItem('email')
 
     const SignBtn = ()=> {
       if(statusMail && statusPass) {
@@ -72,16 +74,37 @@ const HomePage = ()=> {
         
     }
 
+    const Name = ()=> {
+      if(validmail === 'true') {
+        return (
+          <h5 class="text-primary">{customer.firstName} {customer.lastName}</h5>
+        )
+      }
+    }
+
+    const getCustomer = async ()=> {
+      if (validmail === 'true') {
+        let { data: customers, error } = await supabase
+        .from('customers')
+        .select('firstName,lastName')
+        .eq('id', id)
+          
+        setCustomer(customers[0]);
+        console.log(customers)
+      }
+    }
+
     useEffect(() => {
       const controller = new AbortController();
       var isMounted = true
 
-      getItems()
+      getItems();
+      getCustomer();
 
       return () => {
         isMounted = false
         controller.abort();
-    }
+      }
     }, [])
     
 
@@ -202,6 +225,7 @@ const HomePage = ()=> {
         </ul>
         {/* <!-- Left links --> */}
       </div>
+      {Name()}
     </div>
     {/* <!-- Container wrapper --> */}
   </nav>

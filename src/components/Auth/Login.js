@@ -41,9 +41,6 @@ function App() {
                 localStorage.setItem('email', 'true');
                 // navigate('/home')
             }
-            else {
-                localStorage.setItem('email', 'false');
-            }
         }
 
         // Iterate through each user object in the array
@@ -103,9 +100,6 @@ function App() {
         if (customer.email === email) {
             localStorage.setItem('email', 'true');
             // navigate('/home')
-        }
-        else {
-            localStorage.setItem('email', 'false');
         }
     }
 
