@@ -42,41 +42,55 @@ function Copyright(props) {
 
 const theme = createTheme();
 
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+
 export default function ResetPassword() {
-  const [newPassword, setNewPassword] = useState('');
+  const [password, setPassword] = useState('');
   const [errMsg, setErrMsg] = useState('');
   const { setAuth } = useAuth();
   const navigate = useNavigate();
   const mail = localStorage.getItem('mail')
 
+  const [validPwd, setValidPwd] = useState(false);
+  const [pwdFocus, setPwdFocus] = useState(false);
+
+  useEffect(() => {
+    const result = PWD_REGEX.test(password);
+    setValidPwd(result);
+}, [password])
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { data, error } = await supabase
-    .from('customers')
-    .update({ password: newPassword })
-    .eq('email', mail)
-    .select()
-
-    if(error) {
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: "Update Failed",
-        showConfirmButton: false,
-        timer: 1500
-      });
-      navigate('/signin')
-    }
-    else {
-      Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: "Update Successful",
-        showConfirmButton: false,
-        timer: 1500
-      });
-      navigate('/signin')
+    if(validPwd) {
+      const { data, error } = await supabase
+      .from('customers')
+      .update({ password: password })
+      .eq('email', mail)
+      .select()
+  
+      if(error) {
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "Update Failed",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        navigate('/signin')
+      }
+      else {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Update Successful",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        navigate('/signin')
+      }
+    }else {
+      setErrMsg("Enter valid password")
     }
 
         
@@ -108,23 +122,38 @@ export default function ResetPassword() {
                 <Typography component="h1" variant="h5">
                 Reset Password
                 </Typography>
+                <Box sx={{ mt: 1 }}>
                 { errMsg ? 
-                <Alert variant="filled" severity="error" sx={{ width: '100%' }}>
+                <Alert variant="filled" severity="error" sx={{ width: '100%', marginBottom: 2 }}>
                     {errMsg}
                 </Alert> :
                 ""          
                 }
-                <Box sx={{ mt: 1 }}>
-                <TextField
-                    margin="normal"
-                    onChange={(e)=> setNewPassword(e.target.value)}
-                    required
-                    fullWidth
-                    id="email"
-                    label="New Password"
-                    name="newPassword"
-                    autoFocus
-                />
+                <Grid item xs={12}>
+                <div class="form-floating">
+                  <input 
+                    class={validPwd ? "form-control is-valid" : "form-control" && !password ? "form-control": "form-control is-invalid"}
+                    type='text'
+                    required 
+                    placeholder="Password"
+                    onChange={(e) => { 
+                        setPassword(e.target.value)
+                    }}
+                    onFocus = {()=> setPwdFocus(true)}
+                    onBlur = {()=> setPwdFocus(false)}
+                    id="floatingInput" 
+                    value={password}
+                  />
+                  <label for="floatingInput">Password</label>
+                  <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions": "offscreen"}>
+                    <i class="ti-info-alt" style={{margin: '5px'}}></i>
+                      8 to 24 characters.<br/>
+                    Must include uppercase and lowercase letters,<br/>
+                    a number and a special character.<br/>
+                    Allowed special characters: ! @ # $ %
+                  </p>
+                </div>
+              </Grid>
                 <Button
                     fullWidth
                     variant="contained"
