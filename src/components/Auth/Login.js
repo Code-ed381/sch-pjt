@@ -100,39 +100,45 @@ function App() {
   }
 
   return (
+    <>
+    <div class="d-flex justify-content-center m-4">
+        <p><a class="link-opacity-15-hover" href="/">Home</a></p>
+        <p><a class="link-opacity-15-hover m-4" href="#/products">Shop</a></p>
+        <p><a class="link-opacity-15-hover" href="#/contact">Contact</a></p>
+    </div>
     <section class="container-auth forms">
     <div class="formed login">
-        <div class="form-content">
-            <header class="header">Login</header>
-            { errMsg ? 
-                <Alert variant="filled" severity="error" sx={{ width: '100%' }}>
-                    {errMsg}
-                </Alert> :
-                ""          
-            }
-            <form id="loginForm">
-                <div class="field input-field">
-                    <input type="email" placeholder="Email" class="input" id="email" onChange={(e)=> setEmail(e.target.value)}/>
-                </div>
+    <div class="form-content">
+        <header class="header">Login</header>
+        { errMsg ? 
+            <Alert variant="filled" severity="error" sx={{ width: '100%' }}>
+                {errMsg}
+            </Alert> :
+            ""          
+        }
+        <form id="loginForm">
+            <div class="field input-field">
+                <input type="email" placeholder="Email" class="input" id="email" onChange={(e)=> setEmail(e.target.value)}/>
+            </div>
 
-                <div class="field input-field">
-                    <input type={type} placeholder="Password" class="password" id="password" onChange={(e)=> setPassword(e.target.value)}/>
-                    <i class={isRevealPwd} onClick={handleChange}></i>
-                </div>
+            <div class="field input-field">
+                <input type={type} placeholder="Password" class="password" id="password" onChange={(e)=> setPassword(e.target.value)}/>
+                <i class={isRevealPwd} onClick={handleChange}></i>
+            </div>
 
-                <div class="form-link">
-                    <a onClick={handleReset} class="forgot-pass">Forgot password?</a>
-                </div>
+            <div class="form-link">
+                <a onClick={handleReset} class="forgot-pass">Forgot password?</a>
+            </div>
 
-                <div class="field button-field">
-                    <button type="button" onClick={handleSubmit} >Login</button>
-                </div>
-            </form>
+            <div class="field button-field">
+                <button type="button" onClick={handleSubmit} >Login</button>
+            </div>
+        </form>
 
-            {/* <div class="form-link">
-                <span>Don't have an account? <a href="#/signup" class="link signup-link">Signup</a></span>
-            </div> */}
-        </div>
+        {/* <div class="form-link">
+            <span>Don't have an account? <a href="#/signup" class="link signup-link">Signup</a></span>
+        </div> */}
+    </div>
 
         {/* <div class="line"></div>
 
@@ -151,7 +157,8 @@ function App() {
         </div> */}
 
     </div>
-</section>
+    </section>
+    </>
   );
 }
 
