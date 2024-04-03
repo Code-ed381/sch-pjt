@@ -5,6 +5,12 @@ import { useNavigate } from "react-router-dom";
 import useAuth from '../Hook/useAuth';
 import image1 from '../../assets/image1.jpg';
 import logo from '../../assets/logo.png';
+import Alert from '@mui/material/Alert';
+
+const USER_REGEX = /^[A-Za-z]+(?:\s[A-Za-z]+)+$/;
+const CARD_REGEX = /^\d{4}\s\d{4}\s\d{4}\s\d{4}$/;
+const EXPIRY_REGEX = /^(0[1-9]|1[0-2])\/[0-9]{2}$/;
+const CVV_REGEX = /^\d{3}$/;
 
 
 const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
@@ -21,6 +27,45 @@ const Checkout = ()=> {
     const [items, setItems] = useState([])
     const [total, setTotal] = useState(null)
     const [customer, setCustomer] = useState([])
+
+    const [fullname, setFullname] = useState("");
+    const [validName, setValidName] = useState(false);
+    const [userFocus, setUserFocus] = useState(false);
+
+    const [num, setNum] = useState(null);
+    const [validNum, setValidNum] = useState(false);
+    const [numFocus, setNumFocus] = useState(false);
+
+    const [expiry, setExpiry] = useState(null);
+    const [validExpiry, setValidExpiry] = useState(false);
+    const [expiryFocus, setExpiryFocus] = useState(false);
+
+    const [cvv, setCvv] = useState(null);
+    const [validCVV, setValidCVV] = useState(false);
+    const [cvvFocus, setCvvFocus] = useState(false);
+
+    const [errMsg, setErrMsg] = useState(false);
+
+
+    useEffect(() => {
+      const result = USER_REGEX.test(fullname);
+      setValidName(result)
+    }, [fullname])
+  
+    useEffect(() => {
+      const result = CARD_REGEX.test(num);
+      setValidNum(result)
+    }, [num])
+  
+    useEffect(() => {
+      const result = EXPIRY_REGEX.test(expiry);
+      setValidExpiry(result)
+    }, [expiry])
+
+    useEffect(() => {
+      const result = CVV_REGEX.test(cvv);
+      setValidCVV(result)
+    }, [cvv])
 
     const SignBtn = ()=> {
       if(statusMail && statusPass) {
@@ -129,12 +174,31 @@ const Checkout = ()=> {
       navigate('/')
     }
 
-    const handleCheckout = ()=> {
-      if(statusMail && statusPass) {
-        alert("logged In")
+    const handleCheckout = async ()=> {
+      if(validName && validNum && validCVV && validExpiry) {
+        
+        const { error } = await supabase
+        .from('cart')
+        .delete()
+        .eq('customer_id', id)
+        
+        if (error) {
+          setErrMsg(error.message)
+        }
+        else {
+          Swal.fire({
+            icon: "success",
+            title: "Payment successful",
+            showConfirmButton: false,
+            timer: 3000
+          });
+        }
       }
       else {
-        navigate('/login')
+        setErrMsg('Input accurate credentials')
+        setTimeout(() => {
+          setErrMsg('')
+        }, 4000);
       }
     }
 
@@ -620,32 +684,91 @@ const Checkout = ()=> {
 
                                 <h3 class="mb-3">{customer.firstName} {customer.lastName}</h3>
 
+                                { errMsg ? 
+                                  <Alert variant="filled" severity="error" sx={{ width: '100%' }}>
+                                    {errMsg}
+                                  </Alert> :
+                                  ""          
+                                }
+
                                 <h5 class="mb-3">Card details</h5>
                                 <form class="mt-4">
                                 <div class="form-outline form-white mb-4">
-                                    <input type="text" id="typeName" class="form-control form-control-lg" siez="17"
-                                    placeholder="Cardholder's Name" />
+                                    <input 
+                                      type="text" 
+                                      id="typeName" 
+                                      class={validName ? "form-control form-control-lg is-valid" : "form-control form-control-lg" && !fullname ? "form-control form-control-lg": "form-control form-control-lg is-invalid"} 
+                                      siez="17"
+                                      placeholder="Cardholder's Name" 
+                                      onChange={(e) => { 
+                                        setFullname(e.target.value)
+                                      }}
+                                      onFocus = {()=> setUserFocus(true)}
+                                      onBlur = {()=> setUserFocus(false)}
+                                      value={fullname}
+                                    />
                                     <label class="form-label" for="typeName">Cardholder's Name</label>
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
-                                    <input type="text" id="typeText" class="form-control form-control-lg" siez="17"
-                                    placeholder="1234 5678 9012 3457" minlength="19" maxlength="19" />
+                                    <input 
+                                      type="text" 
+                                      id="typeText" 
+                                      class="form-control form-control-lg" 
+                                      class={validNum ? "form-control form-control-lg is-valid" : "form-control form-control-lg" && !num ? "form-control form-control-lg": "form-control form-control-lg is-invalid"}
+                                      siez="17"
+                                      onChange={(e) => { 
+                                        setNum(e.target.value)
+                                      }}
+                                      placeholder="1234 5678 9012 3457" 
+                                      minlength="19" 
+                                      maxlength="19" 
+                                      value={num}
+                                      onFocus = {()=> setNumFocus(true)}
+                                      onBlur = {()=> setNumFocus(false)}
+                                    />
                                     <label class="form-label" for="typeText">Card Number</label>
                                 </div>
 
                                 <div class="row mb-4">
                                     <div class="col-md-6">
                                     <div class="form-outline form-white">
-                                        <input type="text" id="typeExp" class="form-control form-control-lg"
-                                        placeholder="MM/YYYY" size="7" id="exp" minlength="7" maxlength="7" />
+                                        <input 
+                                          type="text" 
+                                          id="typeExp" 
+                                          class={validExpiry ? "form-control form-control-lg is-valid" : "form-control form-control-lg" && !expiry ? "form-control form-control-lg": "form-control form-control-lg is-invalid"}
+                                          placeholder="MM/YYYY" 
+                                          size="7" 
+                                          id="exp" 
+                                          minlength="7" 
+                                          maxlength="7" 
+                                          onChange={(e) => { 
+                                            setExpiry(e.target.value)
+                                          }}
+                                          value={expiry}
+                                          onFocus = {()=> setExpiryFocus(true)}
+                                          onBlur = {()=> setExpiryFocus(false)}  
+                                        />
                                         <label class="form-label" for="typeExp">Expiration</label>
                                     </div>
                                     </div>
                                     <div class="col-md-6">
                                     <div class="form-outline form-white">
-                                        <input type="password" id="typeText" class="form-control form-control-lg"
-                                        placeholder="&#9679;&#9679;&#9679;" size="1" minlength="3" maxlength="3" />
+                                        <input 
+                                          type="password" 
+                                          id="typeText" 
+                                          class={validCVV ? "form-control form-control-lg is-valid" : "form-control form-control-lg" && !cvv ? "form-control form-control-lg": "form-control form-control-lg is-invalid"}
+                                          placeholder="&#9679;&#9679;&#9679;" 
+                                          size="1" 
+                                          minlength="3" 
+                                          maxlength="3" 
+                                          onChange={(e) => { 
+                                            setCvv(e.target.value)
+                                          }}
+                                          value={cvv}
+                                          onFocus = {()=> setCvvFocus(true)}
+                                          onBlur = {()=> setCvvFocus(false)} 
+                                        />
                                         <label class="form-label" for="typeText">Cvv</label>
                                     </div>
                                     </div>
@@ -667,13 +790,13 @@ const Checkout = ()=> {
 
                                 <div class="d-flex justify-content-between mb-4">
                                 <p class="mb-2">Total(Incl. taxes)</p>
-                                <p class="mb-2">${total + 20.00 + 10.00}</p>
+                                <p class="mb-2">${Math.round(total) + 20.00 + 10.00}</p>
                                 </div>
 
-                                <button type="button" class="btn btn-info btn-block btn-lg">
+                                <button type="button" class="btn btn-info btn-block btn-lg" onClick={handleCheckout}>
                                 <div class="d-flex justify-content-between">
                                     <span>Checkout:      <i class="fas fa-long-arrow-alt-right ms-2"></i></span>
-                                    <span>${total + 20.00 + 10.00}</span>
+                                    <span>${Math.round(total) + 20.00 + 10.00}</span>
                                 </div>
                                 </button>
 

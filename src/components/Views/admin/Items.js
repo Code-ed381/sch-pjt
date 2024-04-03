@@ -111,7 +111,7 @@ export default function Items() {
             Swal.fire({
                 position: "top-end",
                 icon: "error",
-                title: "Failed to add customer",
+                title: "Failed to add item",
                 showConfirmButton: false,
                 timer: 1500
             });
@@ -121,7 +121,7 @@ export default function Items() {
             Swal.fire({
                 position: "top-end",
                 icon: "success",
-                title: "Customer added successfully",
+                title: "Item added successfully",
                 showConfirmButton: false,
                 timer: 1500
             });

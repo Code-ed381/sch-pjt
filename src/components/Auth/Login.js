@@ -147,7 +147,7 @@ function App() {
             </div>
 
             <div class="form-link">
-                <a onClick={handleReset} class="forgot-pass">Forgot password?</a>
+                <a onClick={handleReset} class="forgot-pass" style={{ cursor: 'pointer' }}>Forgot password?</a>
             </div>
 
             <div class="field button-field">
