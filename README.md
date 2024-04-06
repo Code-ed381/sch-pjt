@@ -17,11 +17,18 @@ node -v # should print `v20.12.0`
 npm -v # should print `10.5.0`
 
 
-# Supabase & Google login Database Credentials
+# Supabase URL
 Database_URL - https://supabase.com/dashboard/project/hbvzbmargzwrfctmqqtd/editor
+
+# Supabase login
 login - adjei.edwin381@gmail.com
 password - SamsProject@1
 
+# Google login
+login - adjei.edwin381@gmail.com
+password - SamsProject@123
+
+# Database
 database name - Sams Database
 password - SamsProject@1
 
