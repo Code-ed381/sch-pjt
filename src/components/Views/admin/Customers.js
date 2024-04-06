@@ -17,8 +17,8 @@ import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Alert from '@mui/material/Alert';
 
-const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNudnR3anF3aW9tYnB3cXppem9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA5NzUwNDcsImV4cCI6MjAyNjU1MTA0N30.frr4AozItNRzCyJTyHLkoGzg-CcN0uukd8-JMvw97bo"
+const supabaseUrl = 'https://hbvzbmargzwrfctmqqtd.supabase.co'
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhidnpibWFyZ3p3cmZjdG1xcXRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI0MjYyOTksImV4cCI6MjAyODAwMjI5OX0.6cUMpEa6jksCGMNbgw3vaz-4KkkduiqDWZEgPr0-8Ys"
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 const USER_REGEX = /^[A-Za-zÀ-ÖØ-öø-ÿ'-]+$/;
@@ -116,8 +116,8 @@ export default function Customers() {
             { 
                 email: email, 
                 phone: phone, 
-                firstName: firstName, 
-                lastName: lastName, 
+                first_name: firstName, 
+                last_name: lastName, 
                 password: password, 
             },
             ])
@@ -131,6 +131,8 @@ export default function Customers() {
                     showConfirmButton: false,
                     timer: 1500
                 });
+
+                console.log(error)
             }
             else{
                 Swal.fire({
@@ -160,13 +162,13 @@ export default function Customers() {
     const columns = [
         { field: 'id', headerName: 'ID', width: 90 },
         {
-          field: 'firstName',
+          field: 'first_name',
           headerName: 'First name',
           width: 150,
           editable: true,
         },
         {
-          field: 'lastName',
+          field: 'last_name',
           headerName: 'Last name',
           width: 150,
           editable: true,
