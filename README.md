@@ -15,3 +15,15 @@ choco install nodejs --version="20.12.0"
 node -v # should print `v20.12.0`
 # verifies the right NPM version is in the environment
 npm -v # should print `10.5.0`
+
+
+# Supabase & Google login Database Credentials
+Database_URL - https://supabase.com/dashboard/project/hbvzbmargzwrfctmqqtd/editor
+login - adjei.edwin381@gmail.com
+password - SamsProject@1
+
+database name - Sams Database
+password - SamsProject@1
+
+
+
