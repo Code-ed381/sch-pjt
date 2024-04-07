@@ -100,7 +100,6 @@ export default function Items() {
             name: itemName, 
             price: price, 
             discount: discount, 
-            category_id: category, 
             description: description, 
             quantity: quantity, 
             img: img

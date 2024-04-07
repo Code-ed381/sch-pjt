@@ -66,10 +66,12 @@ const HomePage = ()=> {
       let { data: items, error } = await supabase
       .from('items')
       .select('*')
-      .range(0, 3)
+      // .range(0, 3)
 
-      setItems(items)
-      console.log(items)
+      var data = items.reverse().slice(0, 4)
+
+      setItems(data) 
+      console.log(data)
       console.log(error)
         
     }
