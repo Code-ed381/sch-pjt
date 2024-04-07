@@ -136,10 +136,12 @@ const Checkout = ()=> {
     const getCustomer = async ()=> {
         let { data: customers, error } = await supabase
         .from('customers')
-        .select('firstName,lastName')
+        .select('first_name,last_name')
         .eq('id', id)
           
-        setCustomer(customers[0]);
+        var customer = customers[0]
+
+        setCustomer(customer);
         console.log(customers)
     }
 
@@ -192,6 +194,8 @@ const Checkout = ()=> {
             showConfirmButton: false,
             timer: 3000
           });
+
+          navigate(window.location.pathname, {replace: true})
         }
       }
       else {

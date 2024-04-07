@@ -283,7 +283,7 @@ const Products = ()=> {
                     ref={userRef}
                     class={validName ? "form-control is-valid" : "form-control" && !fullname ? "form-control": "form-control is-invalid"}
                     id="floatingInput" 
-                    placeholder="name@example.com"
+                    placeholder="eg. John Doe"
                     autoComplete="off"
                     onChange={(e) => { 
                       setFullname(e.target.value)
@@ -307,7 +307,7 @@ const Products = ()=> {
                     class={validEmail ? "form-control is-valid" : "form-control" && !email ? "form-control": "form-control is-invalid"}
                     type="text" 
                     required
-                    placeholder = "Email"
+                    placeholder = "name@example.com"
                     autoComplete = "off" 
                     onChange={(e) => { 
                         setEmail(e.target.value)
