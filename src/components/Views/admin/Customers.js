@@ -260,7 +260,6 @@ export default function Customers() {
                         },
                         }}
                         pageSizeOptions={[10]}
-                        checkboxSelection
                         disableRowSelectionOnClick
                     />
                     {/* <table class="table">

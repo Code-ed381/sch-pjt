@@ -228,7 +228,6 @@ export default function Items() {
                         },
                         }}
                         pageSizeOptions={[10]}
-                        checkboxSelection
                         disableRowSelectionOnClick
                     />
                 </Box>
