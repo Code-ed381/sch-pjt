@@ -137,8 +137,8 @@ export default function Feedback() {
                 </Typography>   
                 </AccordionDetails>
                 <AccordionActions>
-                <Button>Reply</Button>
-                <Button color="error">Delete</Button>
+                {/* <Button>Reply</Button>
+                <Button color="error">Delete</Button> */}
                 </AccordionActions>
             </Accordion>
         )}
