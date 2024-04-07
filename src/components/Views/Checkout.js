@@ -195,7 +195,12 @@ const Checkout = ()=> {
             timer: 3000
           });
 
-          navigate(window.location.pathname, {replace: true})
+          setFullname('');
+          setNum('');
+          setExpiry('');
+          setCvv('');
+
+          getItems()
         }
       }
       else {
@@ -272,15 +277,15 @@ const Checkout = ()=> {
   {/* <!-- Heading --> */}
   <div class="bg-primary mb-4">
     <div class="container py-4">
-      <h3 class="text-white mt-2">Shop</h3>
+      <h3 class="text-white mt-2">Checkout</h3>
       {/* <!-- Breadcrumb --> */}
       <nav class="d-flex mb-2">
         <h6 class="mb-0">
           <a href="#/" class="text-white-50">Home</a>
           <span class="text-white-50 mx-2"> </span>
-          <a href="#/contact" class="text-white-50"><u>Contact</u></a>
+          <a href="#/products" class="text-white-50"><u>Shop</u></a>
           <span class="text-white-50 mx-2"> </span>
-          <a href="#/products" class="text-white"><u>Shop</u></a>
+          <a href="#/contact" class="text-white-50"><u>Contact</u></a>
         </h6>
       </nav>
       {/* <!-- Breadcrumb --> */}
