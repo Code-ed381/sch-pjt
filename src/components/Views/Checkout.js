@@ -9,7 +9,7 @@ import Alert from '@mui/material/Alert';
 
 const USER_REGEX = /^[A-Za-z]+(?:\s[A-Za-z]+)+$/;
 const CARD_REGEX = /^\d{4}\s\d{4}\s\d{4}\s\d{4}$/;
-const EXPIRY_REGEX = /^(0[1-9]|1[0-2])\/[0-9]{2}$/;
+const EXPIRY_REGEX = /^(0[1-9]|1[0-2])\/(202[4-9]|20[3-9]\d)/;
 const CVV_REGEX = /^\d{3}$/;
 
 
@@ -821,7 +821,7 @@ const Checkout = ()=> {
         <hr />
 
         {/* <!-- Pagination --> */}
-        <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
+        {/* <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
           <ul class="pagination">
             <li class="page-item disabled">
               <a class="page-link" href="#" aria-label="Previous">
@@ -839,7 +839,7 @@ const Checkout = ()=> {
               </a>
             </li>
           </ul>
-        </nav>
+        </nav> */}
         {/* <!-- Pagination --> */}
       </div>
     </div>
