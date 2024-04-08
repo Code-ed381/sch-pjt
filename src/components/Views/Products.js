@@ -68,7 +68,7 @@ const Products = ()=> {
       .from('items')
       .select('*')
 
-      setItems(items)
+      setItems(items.reverse())
         
     }
 
@@ -502,7 +502,7 @@ const Products = ()=> {
         <hr />
 
         {/* <!-- Pagination --> */}
-        <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
+        {/* <nav aria-label="Page navigation example" class="d-flex justify-content-center mt-3">
           <ul class="pagination">
             <li class="page-item disabled">
               <a class="page-link" href="#" aria-label="Previous">
@@ -520,7 +520,7 @@ const Products = ()=> {
               </a>
             </li>
           </ul>
-        </nav>
+        </nav> */}
         {/* <!-- Pagination --> */}
       </div>
     </div>
