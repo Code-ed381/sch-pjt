@@ -44,7 +44,7 @@ const Checkout = ()=> {
     const [validCVV, setValidCVV] = useState(false);
     const [cvvFocus, setCvvFocus] = useState(false);
 
-    const [errMsg, setErrMsg] = useState(false);
+    const [errMsg, setErrMsg] = useState(false); 
 
 
     useEffect(() => {
@@ -746,8 +746,11 @@ const Checkout = ()=> {
                                           type="text" 
                                           id="typeExp" 
                                           class={validExpiry ? "form-control form-control-lg is-valid" : "form-control form-control-lg" && !expiry ? "form-control form-control-lg": "form-control form-control-lg is-invalid"}
-                                          placeholder="MM/YYYY"
-                                          id="exp"  
+                                          placeholder="MM/YYYY" 
+                                          size="7" 
+                                          id="exp" 
+                                          minlength="7" 
+                                          maxlength="7" 
                                           onChange={(e) => { 
                                             setExpiry(e.target.value)
                                           }}
@@ -765,6 +768,9 @@ const Checkout = ()=> {
                                           id="typeText" 
                                           class={validCVV ? "form-control form-control-lg is-valid" : "form-control form-control-lg" && !cvv ? "form-control form-control-lg": "form-control form-control-lg is-invalid"}
                                           placeholder="&#9679;&#9679;&#9679;" 
+                                          size="1" 
+                                          minlength="3" 
+                                          maxlength="3" 
                                           onChange={(e) => { 
                                             setCvv(e.target.value)
                                           }}

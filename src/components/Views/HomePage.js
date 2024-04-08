@@ -218,10 +218,10 @@ const HomePage = ()=> {
             <a class="nav-link text-dark" aria-current="page" href="#/">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-dark" href="#/products">Shop</a>
+            <a class="nav-link text-dark-50" href="#/products">Shop</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-dark" href="#/contact">Contact</a>
+            <a class="nav-link text-dark-50" href="#/contact">Contact</a>
           </li>
 
         </ul>
