@@ -178,6 +178,13 @@ const Checkout = ()=> {
 
     const handleCheckout = async ()=> {
       if(validName && validNum && validCVV && validExpiry) {
+        // const { data, error } = await supabase
+        // .from('items')
+        // .update({ quantity: {quantity - 1} })
+        // .eq('some_column', 'someValue')
+        // .select()
+        
+        
         
         const { error } = await supabase
         .from('cart')

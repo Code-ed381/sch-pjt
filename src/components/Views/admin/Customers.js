@@ -400,6 +400,8 @@ export default function Customers() {
                     class={validPhone ? "form-control is-valid" : "form-control" && !phone ? "form-control": "form-control is-invalid"}
                     type="phone" 
                     required
+                    minlength="10" 
+                    maxlength="10" 
                     placeholder = "Phone"
                     autoComplete = "off" 
                     onChange={(e) => { 

@@ -99,7 +99,6 @@ export default function Items() {
         { 
             name: itemName, 
             price: price, 
-            discount: discount, 
             description: description, 
             quantity: quantity, 
             img: img
@@ -160,13 +159,6 @@ export default function Items() {
           headerName: 'Quantity',
           width: 100,
           editable: true,
-        },
-        {
-            field: 'discount',
-            headerName: 'Discount',
-            description: 'This column has a value getter and is not sortable.',
-            sortable: true,
-            width: 100,
         },
         {
             field: 'description',
@@ -258,10 +250,10 @@ export default function Items() {
         >
                 
             <TextField id="outlined-basic" value={itemName} onChange={(e)=> setItemName(e.target.value)} label="Name" variant="outlined" />
-            <TextField id="outlined-basic" value={price} onChange={(e)=> setPrice(e.target.value)} label="Price" variant="outlined"  />
-            <TextField id="outlined-basic" value={discount} onChange={(e)=> setDiscount(e.target.value)} label="Discount" variant="outlined"  />
+            <TextField id="outlined-basic" value={price} type="number" onChange={(e)=> setPrice(e.target.value)} label="Price" variant="outlined"  />
+            {/* <TextField id="outlined-basic" value={discount}  type="number" onChange={(e)=> setDiscount(e.target.value)} label="Discount" variant="outlined"  /> */}
             <TextField id="outlined-basic" value={description} onChange={(e)=> setDescription(e.target.value)} label="Description" variant="outlined"  />
-            <TextField id="outlined-basic" value={quantity} onChange={(e)=> setQuantity(e.target.value)} label="Quantity" variant="outlined"  />
+            <TextField id="outlined-basic" value={quantity} type="number" onChange={(e)=> setQuantity(e.target.value)} label="Quantity" variant="outlined"  />
             <TextField id="outlined-basic" value={img} onChange={(e)=> setImg(e.target.value)} label="Image URL" variant="outlined"  />
             <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Category</InputLabel>

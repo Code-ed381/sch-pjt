@@ -4,6 +4,8 @@ import { createClient } from '@supabase/supabase-js';
 import Swal from 'sweetalert2';
 import image1 from '../../assets/image1.jpg';
 import logo from '../../assets/logo.png';
+import Typography from '@mui/material/Typography';
+
 
 const supabaseUrl = 'https://hbvzbmargzwrfctmqqtd.supabase.co'
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhidnpibWFyZ3p3cmZjdG1xcXRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI0MjYyOTksImV4cCI6MjAyODAwMjI5OX0.6cUMpEa6jksCGMNbgw3vaz-4KkkduiqDWZEgPr0-8Ys"
@@ -76,14 +78,6 @@ const HomePage = ()=> {
         
     }
 
-    const Name = ()=> {
-      if(validmail === 'true') {
-        return (
-          <h5 class="text-primary">{customer.firstName} {customer.lastName}</h5>
-        )
-      }
-    }
-
     const getCustomer = async ()=> {
       if (validmail === 'true') {
         let { data: customers, error } = await supabase
@@ -125,6 +119,7 @@ const HomePage = ()=> {
         timer: 1500
       });
 
+      setCustomer([])
       navigate('/')
     }
 
@@ -168,6 +163,8 @@ const HomePage = ()=> {
         <!-- Center elements --> */}
         <div class="order-lg-last col-lg-5 col-sm-8 col-8">
           <div class="d-flex float-end">
+            { customer != [] ? (<Typography variant="h5" class="m-2 text-muted">Hi, { customer?.first_name }</Typography>) :("")}
+              
             {SignBtn()}
             {/* <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank"> <i class="bi bi-suit-heart-fill m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Wishlist</p> </a> */}
             <button onClick={handleCheckout} class="btn btn-outlined-primary py-1 px-3 nav-link d-flex align-items-center"> <i class="bi bi-cart4 m-1 me-md-2"></i><p class="d-none d-md-block mb-0">My cart</p> </button>
@@ -227,7 +224,6 @@ const HomePage = ()=> {
         </ul>
         {/* <!-- Left links --> */}
       </div>
-      {Name()}
     </div>
     {/* <!-- Container wrapper --> */}
   </nav>
