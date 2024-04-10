@@ -163,7 +163,7 @@ const HomePage = ()=> {
         <!-- Center elements --> */}
         <div class="order-lg-last col-lg-5 col-sm-8 col-8">
           <div class="d-flex float-end">
-            { customer != [] ? (<Typography variant="h5" class="m-2 text-muted">Hi, { customer?.first_name }</Typography>) :("")}
+            { customer.first_name ? <Typography variant="h5" class="m-2 text-muted">Hi, { customer?.first_name }</Typography> :""}
               
             {SignBtn()}
             {/* <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank"> <i class="bi bi-suit-heart-fill m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Wishlist</p> </a> */}
