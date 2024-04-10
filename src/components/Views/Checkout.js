@@ -9,7 +9,9 @@ import Alert from '@mui/material/Alert';
 
 const USER_REGEX = /^[A-Za-z]+(?:\s[A-Za-z]+)+$/;
 const CARD_REGEX = /^\d{4}\s\d{4}\s\d{4}\s\d{4}$/;
-const EXPIRY_REGEX = /^(0[1-9]|1[0-2])\/(202[4-9]|20[3-9]\d)/;
+const EXPIRY_REGEX = /^(0[1-9]|1[0-2])\/((?:20[2-9]\d|2[1-9]\d{2})\/?)$/;
+// const EXPIRY_REGEX = /^(?=(0[1-9]|1[0-2]))\d(?:\d{4}|\d{3}(?![0-9]))$/;
+// const EXPIRY_REGEX = /^(0[1-9]|1[0-2])\/(202[4-9]|20[3-9]\d)/;
 const CVV_REGEX = /^\d{3}$/;
 
 
@@ -58,8 +60,21 @@ const Checkout = ()=> {
     }, [num])
   
     useEffect(() => {
-      const result = EXPIRY_REGEX.test(expiry);
-      setValidExpiry(result)
+      // const result = EXPIRY_REGEX.test(expiry);
+
+      const validateDate = (dateString) => {
+        const regex = /^(0[1-9]|1[0-2])\/((?:20[2-9]\d|2[1-9]\d{2}))$/;
+        if (!regex.test(dateString)) {
+          return false; // Invalid format
+        }
+    
+        const [month, year] = dateString.split('/');
+        const currentDate = new Date();
+        const inputDateObj = new Date(parseInt(year), parseInt(month) - 1);
+    
+        return inputDateObj >= currentDate; // Compare input date with current date
+      };
+      setValidExpiry(validateDate(expiry))
     }, [expiry])
 
     useEffect(() => {
