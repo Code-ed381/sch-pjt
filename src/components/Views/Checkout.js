@@ -199,7 +199,44 @@ const Checkout = ()=> {
         // .eq('some_column', 'someValue')
         // .select()
         
+        const { data: cartData, error: cartError } = await supabase
+      .from('cart')
+      .select('item_id')
+      .eq('customer_id', id);
+
+      if (cartError) {
+        setErrMsg(cartError.message);
+      } else {
+        // Retrieve item IDs from the cart
+        const itemIds = cartData.map(item => item.item_id);
+  
+        // Update quantity for each item in the items table
+        for (const itemId of itemIds) {
+          const { data: itemData, error: itemError } = await supabase
+            .from('items')
+            .select('id, quantity')
+            .eq('id', itemId)
+            .single();
+  
+          if (itemError) {
+            setErrMsg(itemError.message);
+            return; // Exit the function if there's an error
+          }
+  
+          // Update quantity for the current item
+          const updatedQuantity = itemData.quantity - 1;
+          const { error: updateError } = await supabase
+            .from('items')
+            .update({ quantity: updatedQuantity })
+            .eq('id', itemId);
+  
+          if (updateError) {
+            setErrMsg(updateError.message);
+            return; // Exit the function if there's an error
+          }
         
+        }}
+
         
         const { error } = await supabase
         .from('cart')
