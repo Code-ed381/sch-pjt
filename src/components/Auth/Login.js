@@ -63,7 +63,7 @@ function App() {
             navigate('/')
         }
         else(
-            setErrMsg('Invalid username or password')
+            setErrMsg('Invalid email or password')
         )
 
         // if(error) {
