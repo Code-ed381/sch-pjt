@@ -16,8 +16,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { createClient } from '@supabase/supabase-js';
 import useAuth from './Hook/useAuth';
 
-const supabaseUrl = 'https://snvtwjqwiombpwqzizoe.supabase.co'
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNudnR3anF3aW9tYnB3cXppem9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTA5NzUwNDcsImV4cCI6MjAyNjU1MTA0N30.frr4AozItNRzCyJTyHLkoGzg-CcN0uukd8-JMvw97bo"
+const supabaseUrl = 'https://gyxpanwekhoqwqqzilhb.supabase.co'
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5eHBhbndla2hvcXdxcXppbGhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE0MzM2MDksImV4cCI6MjA1NzAwOTYwOX0.M3agjTfQ0cIc5BgAYWmbV7IyMq7VhIX9ua5dz1PW40I"
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 const pages = ['Products', 'Pricing', 'Blog'];
